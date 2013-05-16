@@ -1,0 +1,17 @@
+Strategy for Hackathon
+
+Tech
+	- Rails 3.12.13
+	- MySQL or PostgreSQL
+	- Nginx
+Priorities
+	1. Tagging music in locations - will need to search SoundCloud
+	2. Streaming on Desktop
+	3. Stream on mobile based on current location (searching problem)
+	4. Tagging on mobile
+	5. Facebook integration
+	6. Prioritize songs w/close friends
+	7. "Like" a song to prioritize it
+
+API Endpoints
+	TBD
