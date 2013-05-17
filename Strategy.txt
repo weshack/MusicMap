@@ -1,7 +1,7 @@
 Strategy for Hackathon
 
 Tech
-	- Rails 3.12.13
+	- Rails 3.2.13
 	- MySQL or PostgreSQL
 	- Nginx
 Priorities
