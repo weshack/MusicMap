@@ -16,7 +16,7 @@ class SongsController < ApplicationController
   # GET /songs/1
   # GET /songs/1.json
   def show
-    @song = Song.find(params[:id])
+    @song = Song.find(:id)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -88,4 +88,23 @@ class SongsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def show_close_songs
+    @songs = Song.near(current_location, radius)
+  end
+
+  private
+    
+    def distance(a, b)
+      sq = a.zip(b).map{|a,b| (a-b) ** 2}
+      Math.sqrt(sq.inject(0) {|s,c| s + c})
+    end
+
+    # given a latitude(lat) and longitude(lng), return a list of 
+    # songs that were tagged near that
+    def surrounding_songs(lat, long)
+      radius = 0.000823
+      
+      @close_songs = Song.where(distance([:latitude, :longitude], [lat, long]) < radius )
+    end
 end
