@@ -1,0 +1,59 @@
+html {
+	height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, "MS Trebuchet", sans-serif;
+  overflow: hidden;
+}
+
+#header {
+  width: 100%;
+  height: 81px;
+  border-bottom: 2px solid #CCC;
+  margin: 0px;
+}
+
+#header h1 {
+  text-align: center;
+}
+
+#map-canvas {
+  position: absolute;
+  top: 81px;
+  bottom: 5px;
+  width: 100%;
+}
+
+.songsearch {
+  width: 320px;
+  height: 70px;
+  font-size: 16px;
+  overflow-y: visible;
+  overflow-x: hidden;
+}
+
+.songsearch .searchbox {
+  width: 250px;
+  height: 20px;
+  margin-top: 10px;
+  border: 1px solid #CCC;
+  padding: 5px;
+}
+
+.yui3-aclist-content {
+  background: white;
+  border: 1px solid #CCC;
+}
+
+.yui3-aclist-item {
+  padding: 3px;
+}
+
+.yui3-aclist-item-active, .yui3-aclist-item-hover {
+  background: #9aa5ff;
+}
+
