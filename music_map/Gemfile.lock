@@ -1,6 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    7digital (0.1.2)
+      nokogiri (>= 1.5.0)
+      oauth (>= 0.4.5)
     actionmailer (3.2.13)
       actionpack (= 3.2.13)
       mail (~> 2.5.3)
@@ -53,6 +56,8 @@ GEM
     mime-types (1.23)
     multi_json (1.7.3)
     mysql (2.9.1)
+    nokogiri (1.5.9)
+    oauth (0.4.7)
     polyglot (0.3.3)
     rack (1.4.5)
     rack-cache (1.2)
@@ -104,6 +109,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  7digital
   coffee-rails (~> 3.2.1)
   jquery-rails
   json

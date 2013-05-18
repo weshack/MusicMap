@@ -27,6 +27,8 @@ group :production do
   gem 'mysql'
 end
 
+gem '7digital'
+
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
