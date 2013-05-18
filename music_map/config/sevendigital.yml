@@ -30,7 +30,7 @@ ignorant_lazy_load: false
 # @client.release.search("radiohead", :country => 'ES', :page_size => 5) -> will return 5 results from spanish catalogue
 
 #end user's location
-#country: GB
+country: US
 
 ##size of images returned by API responses (for valid size please see the 7digital API documentation)
 #image_size: 50

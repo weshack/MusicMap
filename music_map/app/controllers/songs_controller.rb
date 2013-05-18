@@ -57,7 +57,10 @@ class SongsController < ApplicationController
   end
 
   def add_new_tag(json_object)
+    client = Sevendigital::Client.new
+
     hash = JSON.parse json_object
+    Song.create( {
     
   end
 

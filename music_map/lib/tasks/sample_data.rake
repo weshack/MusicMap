@@ -1,6 +1,6 @@
 namespace :db do
   desc "Fill database with sample songs"
-  task populate: :environment do
+  task :populate => :environment do
     make_songs
   end
 end
