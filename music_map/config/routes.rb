@@ -3,6 +3,8 @@ MusicMap::Application.routes.draw do
 
   resources :songs
 
+  match '/song_tags', :to => 'songs#show_close_songs'
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
