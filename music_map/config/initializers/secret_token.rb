@@ -4,4 +4,4 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-MusicMap::Application.config.secret_token = '469ab1b535b04b10f766c7c027c54f8ece63dc5b76d21df12dd8e8187d13a4f176f9e75cc41909df1ceb1eb327da948319a1d49a03afc79e1e8b5d8ea417157f'
+MusicMap::Application.config.secret_token = 'a9fe49fdf3ce1b3eb24430cc3643b5f99d67012977f47cd6b76fa4c8bef6571f87f2764a7417f106319a4a7a6ccb2b98dfe3886573df4d180dd672dc443fb23b'
