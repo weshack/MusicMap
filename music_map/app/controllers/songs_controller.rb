@@ -11,9 +11,6 @@ class SongsController < ApplicationController
     end
   end
 
-  def custom(object)
-
-
 
   # GET /songs
   # GET /songs.json
@@ -72,9 +69,23 @@ class SongsController < ApplicationController
   # POST /songtags
   # POST /songtags.json
   def songtags(json_object) 
+    client = client = Sevendigital::Client.new
     # Our has table
     h = JSON.parse json_object
-    Song.create( h )
+    song_id = h["song_id"]
+    lat = h["latitude"]
+    long = h["longitude"]
+
+    details = client.track.get_details(song_id)
+    artist = details.artist.name
+    title = details.title
+    album = details.release.title
+    stream_url = details.preview_url
+    art_url = details.release.image(100)
+
+    Song.create( {:song_id => song_id, :longitude => long, :latitude => lat,
+                  :artist => artist, :album => album, :song => title,
+                  :stream_url => stream_url, :art_url => art_url } )
   end
 
   # PUT /songs/1

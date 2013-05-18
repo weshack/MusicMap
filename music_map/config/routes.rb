@@ -5,6 +5,7 @@ MusicMap::Application.routes.draw do
 
   match '/song_tags', :to => 'songs#show_close_songs'
   match '/songtags', :to => 'songs#songtags', :via => :post
+  match '/songtagsall', :to => 'songs#sontagsall', :via => :get
 
 
   # The priority is based upon order of creation:
