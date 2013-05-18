@@ -93,6 +93,7 @@ class SongsController < ApplicationController
   end
 
   def show_close_songs
+
     @songs = Song.near(current_location, radius)
   end
 
