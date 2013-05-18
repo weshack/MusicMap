@@ -1,4 +1,7 @@
 class SongsController < ApplicationController
+
+  def 
+
   # GET /songs
   # GET /songs.json
   def index
@@ -51,6 +54,11 @@ class SongsController < ApplicationController
         format.json { render :json => @song.errors, :status => :unprocessable_entity }
       end
     end
+  end
+
+  def add_new_tag(json_object)
+    hash = JSON.parse json_object
+    
   end
 
   # PUT /songs/1
