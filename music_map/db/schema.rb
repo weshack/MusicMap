@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130518214556) do
+ActiveRecord::Schema.define(:version => 20130518232139) do
 
   create_table "songs", :force => true do |t|
     t.string   "user"
@@ -20,6 +20,11 @@ ActiveRecord::Schema.define(:version => 20130518214556) do
     t.float    "longitude"
     t.string   "address"
     t.integer  "song_id"
+    t.string   "artist"
+    t.string   "album"
+    t.string   "song"
+    t.string   "stream_url"
+    t.string   "art_url"
   end
 
 end

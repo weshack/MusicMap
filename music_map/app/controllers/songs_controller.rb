@@ -1,6 +1,19 @@
 class SongsController < ApplicationController
 
-  def 
+  # GET /songtags
+  # GET /songtags/json
+  def songtags
+    @songs = Song.all
+    
+    respond_to do |format|
+      format.html
+      format.json { render :json => @songs }
+    end
+  end
+
+  def custom(object)
+
+
 
   # GET /songs
   # GET /songs.json
@@ -56,12 +69,12 @@ class SongsController < ApplicationController
     end
   end
 
-  def add_new_tag(json_object)
-    client = Sevendigital::Client.new
-
-    hash = JSON.parse json_object
-    Song.create( {
-    
+  # POST /songtags
+  # POST /songtags.json
+  def songtags(json_object) 
+    # Our has table
+    h = JSON.parse json_object
+    Song.create( h )
   end
 
   # PUT /songs/1
