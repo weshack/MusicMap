@@ -29,22 +29,31 @@ body {
 }
 
 .songsearch {
-  width: 350px;
+  width: 320px;
   height: 70px;
   font-size: 16px;
-  overflow: visible;
+  overflow-y: visible;
+  overflow-x: hidden;
 }
 
 .songsearch .searchbox {
-  width: 90%;
+  width: 250px;
   height: 20px;
   margin-top: 10px;
   border: 1px solid #CCC;
   padding: 5px;
 }
 
-.yui3-aclist {
+.yui3-aclist-content {
   background: white;
-  border: 1px #CCC;
+  border: 1px solid #CCC;
+}
+
+.yui3-aclist-item {
+  padding: 3px;
+}
+
+.yui3-aclist-item-active, .yui3-aclist-item-hover {
+  background: #9aa5ff;
 }
 

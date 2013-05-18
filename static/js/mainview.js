@@ -24,7 +24,7 @@ YUI().use('node', 'autocomplete', function(Y) {
     searchWindow.open(map);
     // TODO: This is hacky. Why doesn't the DOM node exist immediately
     // after the InfoWindow is created?
-    Y.later(200, Y, function() {
+    Y.later(300, Y, function() {
       var ac = new Y.AutoComplete({
         inputNode: Y.one('.songsearch .searchbox'),
         render: false,
@@ -34,8 +34,9 @@ YUI().use('node', 'autocomplete', function(Y) {
       // TODO: This is super hacky. Try to find a better way to make
       // the autocomplete results drop below the InfoWindow.
       Y.one('.songsearch').get('parentNode')
+                          .setStyle('overflowX', 'hidden')
                           .get('parentNode')
-                          .setStyle('overflow', 'visible');
+                          .setStyle('overflow', 'visible')
     });
 
 
