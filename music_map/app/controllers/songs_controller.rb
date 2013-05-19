@@ -140,17 +140,17 @@ class SongsController < ApplicationController
       format.html { redirect_to root_path }
       format.json { render :json => @songs }
     end
-    #@songs = Song.near(location, radius)
+    # @songs = Song.near(current_location, radius)
   end
 
   private
-    
+
     def distance(a, b)
       sq = a.zip(b).map{|a,b| (a-b) ** 2}
       Math.sqrt(sq.inject(0) {|s,c| s + c})
     end
 
-    # given a latitude(lat) and longitude(lng), return a list of 
+    # given a latitude(lat) and longitude(lng), return a list of
 
     def set_geolocation
       session[:location] = {:latitude => params[:latitude],

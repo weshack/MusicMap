@@ -12,21 +12,54 @@ body {
 
 #header {
   width: 100%;
-  height: 81px;
+  height: 80px;
   border-bottom: 2px solid #CCC;
   margin: 0px;
 }
 
 #map-canvas {
   position: absolute;
-  top: 101px;
+  top: 82px;
   bottom: 0px;
-  width: 100%;
+  left: 0px;
+  right: 350px;
   z-index: 3;
 
   .marker-display {
     width: 200px;
     cursor: pointer;
+  }
+}
+
+#sidebar {
+  border-left: 2px solid #CCC;
+  right: 0px;
+  width: 348px;
+  position: absolute;
+  bottom: 0px;
+  top: 82px;
+  overflow: auto;
+
+  .nearby-songs {
+    padding: 15px;
+
+    .album-art {
+      width: 80px;
+      height: 80px;
+    }
+
+    .song {
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .song-info {
+      clear:both;
+      display: inline-block;
+      position: relative;
+      top: -10px;
+      left: 10px
+    }
   }
 }
 

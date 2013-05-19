@@ -1,6 +1,7 @@
 MusicMap::Application.routes.draw do
   resources :authentications
 
+  get "/auth/facebook"
   get "home/index"
 
   post 'set_geolocation' => 'songs#set_geolocation'
