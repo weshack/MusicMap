@@ -1,3 +1,5 @@
+require 'sevendigital'
+
 class SongsController < ApplicationController
 
   # GET /songtags
@@ -8,6 +10,17 @@ class SongsController < ApplicationController
     respond_to do |format|
       format.html
       format.json { render :json => @songs }
+    end
+  end
+
+  def songlib
+    client = Sevendigital::Client.new
+    query = params[:query]
+    query = client.track.search(query)
+    @json_list = (list_query(query))
+    respond_to do |format|
+      format.html
+      format.json { render :json => @json_list }
     end
   end
 
@@ -68,7 +81,7 @@ class SongsController < ApplicationController
   # POST /songtags
   # POST /songtags.json
   def songtags(json_object)
-    client = client = Sevendigital::Client.new
+    client = Sevendigital::Client.new
     # Our has table
     h = JSON.parse json_object
     song_id = h["song_id"]
@@ -125,5 +138,44 @@ class SongsController < ApplicationController
     session[:location] = {:latitude => params[:latitude],
                           :longitude => params[:longitude] }
   end
+    # given a latitude(lat) and longitude(lng), return a list of
+    # songs that were tagged near that
+    def surrounding_songs(lat, long)
+      radius = 0.000823
 
+      @close_songs = Song.where(distance([:latitude, :longitude], [lat, long]) < radius )
+    end
+
+  def list_query(query)
+    client = Sevendigital::Client.new
+    ret_list = []
+    if query.length < 20
+      for song in query
+        song_id = song.id
+        details = client.track.get_details(song_id)
+        artist = details.artist.name
+        title = details.title
+        album = details.release.title
+        stream_url = details.preview_url
+        art_url = details.release.image(100)
+        ret_list.push( { :song_id => song_id, :artist => artist,
+                         :album => album, :song => title,
+                         :stream_url => stream_url, :art_url => art_url } )
+      end
+    else
+      for i in 0..19
+        song_id = query[i].id
+        details = client.track.get_details(song_id)
+        artist = details.artist.name
+        title = details.title
+        album = details.release.title
+        stream_url = details.preview_url
+        art_url = details.release.image(100)
+        ret_list.push( { :song_id => song_id, :artist => artist,
+                         :album => album, :song => title,
+                         :stream_url => stream_url, :art_url => art_url } )
+      end
+    end
+    return ret_list
+  end
 end
