@@ -5,6 +5,7 @@
     <th>Name</th>
     <th>Artist</th>
     <th>Album</th>
+    <th>User</th>
     <th></th>
     <th></th>
     <th></th>
@@ -15,6 +16,7 @@
     <td><%= song.song %></td>
     <td><%= song.artist %></td>
     <td><%= song.album %></td>
+    <td><%= song.user %></td>
     <td><%= link_to 'Show', song %></td>
     <td><%= link_to 'Edit', edit_song_path(song) %></td>
     <td><%= link_to 'Destroy', song, :method => :delete, :data => { :confirm => 'Are you sure?' } %></td>

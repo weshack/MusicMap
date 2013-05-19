@@ -10,22 +10,20 @@ function(Y) {
                     "</div>";
   var SONG_AC_TPL = "<div class='song'>" +
                       "<img class='album-art' src={art_url}>" +
-                      "<div class='song-info'>" +
+                      "<div  class='song-info'>" +
                         "<div class='song-name'>{song}</div>" +
                         "{artist}<br>{album}" +
                       "</div>" +
                     "</div>";
-  var SONG_TAG_TPL = "<div class='song'>" +
-                       "<img class='album-art' src={art_url}>" +
-                       "<div class='song-info'>" +
-                         "<div class='song-name'>{song}</div>" +
-                         "{artist}<br>{album}<br>" +
-                         "<div class='address'>{address}</div>" +
-                         "<a class='playpause' href='{stream_url}'>Play/Pause</a>"
-                       "</div>" +
-                     "</div>";
+  var SONG_TAG_TPL = "<div class='song'>\n" +
+                       "<img class='album-art' src={art_url}>\n" +
+                       "<div class='song-info'>\n" +
+                         "<div class='song-name'>{song}</div>\n" +
+                         "{artist}<br>{album}<br>\n" +
+                         "<a class='playpause' href='{stream_url}'>Play/Pause</a>\n" +
+                       "</div>\n";
   var windowWidth, windowHeight;
-  var map;
+  var map, radiusCircle;
   var responsiveStyle = new Y.StyleSheet();
   var curSearchWindow = null;
   var curMarkerDisplay = null;
@@ -33,31 +31,61 @@ function(Y) {
   google.maps.visualRefresh = true;
 
   function AudioPlayer() {
-    var player = Y.Node.create("<audio></audio>").getDOMNode();
+    var player = Y.Node.create("<audio></audio>");
+    var domNode = player.getDOMNode();
     var isPlaying = false;
+    var canPlay = false;
+    var curSrc = null;
+    var controller;
     Y.one("body").append(player);
+    player.on('canplay', function() {
+      canPlay = true;
+    });
     return {
       setSource: function(src) {
-        player.src = src;
+        if (curSrc !== src) {
+          curSrc = src;
+          player.set('src', curSrc);
+          canPlay = false;
+        }
+      },
+
+      getSource: function() {
+        return curSrc;
+      },
+
+      getController: function() {
+        return controller;
       },
 
       play: function() {
-        player.play();
+        domNode.play();
       },
 
       pause: function() {
-        player.pause();
+        domNode.pause();
       },
 
-      toggle: function() {
+      toggle: function(controlId) {
+        controller = controlId;
         if (isPlaying) {
-          console.log("PAUSE");
-          this.pause();
+          domNode.pause();
+          isPlaying = false;
         }
         else {
-          this.play();
+          if (canPlay) {
+            this.play();
+            isPlaying = true;
+          }
+          else {
+            domNode.addEventListener('canplay', function() {
+              canPlay = true;
+              this.play();
+              domNode.removeEventListener('canplay', this);
+              isPlaying = true;
+            });
+          }
         }
-        isPlaying = !isPlaying;
       }
     }
   }
@@ -91,11 +119,23 @@ function(Y) {
     });
   }
 
-  function postTag(e, position, infoWindow) {
+  function songTagFormatter(songTag) {
+    var max_len = 37;
+    return Y.Lang.sub(SONG_TAG_TPL, {
+      art_url: songTag.art_url,
+      song: ellipsize(songTag.song, max_len),
+      artist: ellipsize(songTag.artist, max_len),
+      album: ellipsize(songTag.album, max_len),
+      address: songTag.address,
+      stream_url: songTag.stream_url
+    });
+  }
+
+  function postTag(e, latLng, infoWindow) {
     var songRec = e.result.raw,
-        latitude = position.lat(),
-        longitude = position.lng();
-    var tagAttrs = {
+        latitude = latLng.lat(),
+        longitude = latLng.lng();
+    var songTag = {
       longitude: longitude,
       latitude: latitude,
       song_id: songRec.song_id,
@@ -103,11 +143,13 @@ function(Y) {
       album: songRec.album,
       song: songRec.song,
       stream_url: songRec.stream_url,
-      art_url: songRec.art_url
+      art_url: songRec.art_url,
+      user: UID
     };
+
     var cfg = {
       method: 'POST',
-      data: Y.JSON.stringify(tagAttrs),
+      data: Y.JSON.stringify(songTag),
       headers: {
         'Content-Type': 'application/json'
       },
@@ -116,11 +158,12 @@ function(Y) {
           curSearchWindow.close();
           console.log(position);
           var marker = new google.maps.Marker({
-            position: position,
+            position: latLng,
             map: map,
             title: songRec.song,
             animation: google.maps.Animation.DROP,
           });
+          google.maps.event.addListener(marker, 'click', makeMarkerCallback(songTag, latLng));
         },
         failure: function(e){
           curSearchWindow.close();
@@ -161,9 +204,25 @@ function(Y) {
       Y.one('.songsearch').get('parentNode')
                           .setStyle('overflowX', 'hidden')
                           .get('parentNode')
-                          .setStyle('overflow', 'visible')
+                          .setStyle('overflow', 'visible');
     });
     curSearchWindow.open(map);
+  }
+
+  function getNearbySongs(latLng) {
+    var latitude = latLng.lat(),
+        longitude = latLng.lng();
+    Y.once('io:success', function(id, o, args) {
+      nearbySongs = Y.JSON.parse(o.responseText);//.slice(0, 1);
+      html = "<div class='nearby-songs'>";
+      nearbySongs.forEach(function(songTag) {
+        html += songTagFormatter(songTag);
+      });
+      html += "</div>";
+      Y.one("#sidebar").setHTML(html);
+    });
+
+    Y.io('/close_songs/' + latitude + '/' + longitude + "/song.json");
   }
 
   function placeRadius(position, map) {
@@ -176,47 +235,36 @@ function(Y) {
       map: map,
       center: position,
       radius: 27.432,
+      editable: true,
       draggable: true
     };
-    circle = new google.maps.Circle(circleOptions);
+    radiusCircle = new google.maps.Circle(circleOptions);
+    google.maps.event.addListener(radiusCircle, 'center_changed', function() {
+      getNearbySongs(radiusCircle.center);
+    });
   }
 
   function closeMarkerDisplay() {
     if (curMarkerDisplay !== null)
-      curMarkerDisplay.close()
+      curMarkerDisplay.close();
   }
 
   function makeMarkerCallback(songTag, latLng) {
     return function() {
       var max_len = 37;
-      var content = Y.Node.create(
-        Y.Lang.sub(SONG_TAG_TPL, {
-          art_url: songTag.art_url,
-          song: ellipsize(songTag.song, max_len),
-          artist: ellipsize(songTag.artist, max_len),
-          album: ellipsize(songTag.album, max_len),
-          address: songTag.address,
-          stream_url: songTag.stream_url
-        })
-      );
-
+      var content = Y.Node.create(songTagFormatter(songTag));
       closeMarkerDisplay();
-      var curMarkerDisplay = new google.maps.InfoWindow({
+      curMarkerDisplay = new google.maps.InfoWindow({
         content: content.getDOMNode(),
         position: latLng,
         maxWidth: 500,
       });
       curMarkerDisplay.open(map);
-      Y.later(300, this, function() {
-          audioPlayer.pause();
-          audioPlayer.setSource(songTag.stream_url);
-          content.one('.playpause').on('click', function(e) {
-            e.preventDefault();
-            audioPlayer.toggle();
-          });
-      });
       google.maps.event.addListener(curMarkerDisplay, 'closeclick', function() {
-        audioPlayer.pause();
+        console.log(audioPlayer.getController());
+        if (audioPlayer.getController() === content.one('.playpause').get('id')) {
+          audioPlayer.pause();
+        }
       });
     }
   }
@@ -231,7 +279,7 @@ function(Y) {
 
     map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
-    Y.once("io:complete", function(id, o, args) {
+    Y.once('io:success', function(id, o, args) {
       var songTags = Y.JSON.parse(o.responseText);
       for (var i = 0; i < songTags.length; i++) {
         var songTag = songTags[i];
@@ -249,10 +297,16 @@ function(Y) {
       tagSong(e.latLng, map);
     });
     google.maps.event.addListener(map, 'click', closeMarkerDisplay);
-    placeRadius(WES_COORDS, map)
+    placeRadius(WES_COORDS, map);
+    getNearbySongs(WES_COORDS);
   }
 
   Y.one('window').on('resize', resizeResponse);
   Y.one('window').on('load', initMap);
+  Y.one('body').delegate('click', function(e) {
+      e.preventDefault();
+      audioPlayer.setSource(e.currentTarget.get('href'));
+      audioPlayer.toggle(e.currentTarget.get('id'));
+  }, '.playpause');
   resizeResponse();
 });
