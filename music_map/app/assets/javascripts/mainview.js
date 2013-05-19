@@ -39,15 +39,6 @@ YUI().use('node', 'gallery-player', 'autocomplete', 'gallery-modernizr', functio
     });
   }
 
-  function get_lat_lng(position) {
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
-    var xhr = new XMLHttpRequest();
-    var base_url = "localhost:3000/close_songs/";
-    var url = base_url + Math.round(latitude) + "/" + Math.round(longitude) + ".json";
-    xhr.open("GET", url);
-  }
-
   function initialize() {
     var mapOptions = {
       center: WES_COORDS,
@@ -59,8 +50,6 @@ YUI().use('node', 'gallery-player', 'autocomplete', 'gallery-modernizr', functio
     google.maps.event.addListener(map, 'click', function(e) {
       tagSong(e.latLng, map);
     });
-
-    //navigator.geolocation.getCurrentPosition(get_lat_lng);
 
   }
 
