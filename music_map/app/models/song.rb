@@ -1,3 +1,7 @@
 class Song < ActiveRecord::Base
-  attr_accessible :location, :name, :url, :user
+  reverse_geocoded_by :latitude, :longitude
+  after_validation :reverse_geocode
+  attr_accessible :song_id, :user, :latitude, :longitude, :artist, :album, 
+                  :stream_url, :art_url, :song
+
 end

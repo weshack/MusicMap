@@ -1,6 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    7digital (0.1.2)
+      nokogiri (>= 1.5.0)
+      oauth (>= 0.4.5)
     actionmailer (3.2.13)
       actionpack (= 3.2.13)
       mail (~> 2.5.3)
@@ -40,6 +43,7 @@ GEM
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
+    geocoder (1.1.8)
     hike (1.2.2)
     i18n (0.6.1)
     journey (1.0.4)
@@ -53,6 +57,8 @@ GEM
     mime-types (1.23)
     multi_json (1.7.3)
     mysql (2.9.1)
+    nokogiri (1.5.9)
+    oauth (0.4.7)
     polyglot (0.3.3)
     rack (1.4.5)
     rack-cache (1.2)
@@ -104,7 +110,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  7digital
   coffee-rails (~> 3.2.1)
+  geocoder
   jquery-rails
   json
   mysql

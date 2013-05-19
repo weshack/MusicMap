@@ -1,4 +1,17 @@
 class SongsController < ApplicationController
+
+  # GET /songtags
+  # GET /songtags/json
+  def songtags
+    @songs = Song.all
+    
+    respond_to do |format|
+      format.html
+      format.json { render :json => @songs }
+    end
+  end
+
+
   # GET /songs
   # GET /songs.json
   def index
@@ -13,7 +26,7 @@ class SongsController < ApplicationController
   # GET /songs/1
   # GET /songs/1.json
   def show
-    @song = Song.find(params[:id])
+    @song = Song.find(:id)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -53,6 +66,28 @@ class SongsController < ApplicationController
     end
   end
 
+  # POST /songtags
+  # POST /songtags.json
+  def songtags(json_object) 
+    client = client = Sevendigital::Client.new
+    # Our has table
+    h = JSON.parse json_object
+    song_id = h["song_id"]
+    lat = h["latitude"]
+    long = h["longitude"]
+
+    details = client.track.get_details(song_id)
+    artist = details.artist.name
+    title = details.title
+    album = details.release.title
+    stream_url = details.preview_url
+    art_url = details.release.image(100)
+
+    Song.create( {:song_id => song_id, :longitude => long, :latitude => lat,
+                  :artist => artist, :album => album, :song => title,
+                  :stream_url => stream_url, :art_url => art_url } )
+  end
+
   # PUT /songs/1
   # PUT /songs/1.json
   def update
@@ -80,4 +115,24 @@ class SongsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def show_close_songs
+
+    @songs = Song.near(current_location, radius)
+  end
+
+  private
+    
+    def distance(a, b)
+      sq = a.zip(b).map{|a,b| (a-b) ** 2}
+      Math.sqrt(sq.inject(0) {|s,c| s + c})
+    end
+
+    # given a latitude(lat) and longitude(lng), return a list of 
+    # songs that were tagged near that
+    def surrounding_songs(lat, long)
+      radius = 0.000823
+      
+      @close_songs = Song.where(distance([:latitude, :longitude], [lat, long]) < radius )
+    end
 end
