@@ -8,7 +8,13 @@ MusicMap::Application.routes.draw do
 
   resources :songs
 
-  match '/close_songs(/:lat(/:lng))', :to => 'songs#show_close_songs', :via => :get
+  DECIMAL_PATTERN = /-?\d+(\.\d+)/.freeze
+  match '/close_songs/*lat/*lng/song', :to => 'songs#show_close_songs',
+    :requirements => { :longitude => DECIMAL_PATTERN, 
+    :latitude => DECIMAL_PATTERN }, :via => :get
+  
+
+# match '/close_songs(/:lat(/:lng))', :to => 'songs#show_close_songs', :via => :get
   match '/create', :to => 'songs#create', :via => :post
   match '/songtagsall', :to => 'songs#sontagsall', :via => :get
   match '/songlib/:query', :to => 'songs#songlib', :via => :get

@@ -222,7 +222,7 @@ function(Y) {
       console.log(html);
     });
 
-    Y.io('/close_songs/' + Math.floor(latitude) + '/' + Math.floor(longitude) + ".json");
+    Y.io('/close_songs/' + latitude + '/' + longitude + "/song.json");
   }
 
   function placeRadius(position, map) {
