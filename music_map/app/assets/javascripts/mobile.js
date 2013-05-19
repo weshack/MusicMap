@@ -31,8 +31,8 @@ YUI().use('node', 'common', 'json', 'io',
        * UPDATE MAP TO FOLLOW  USERS POSITION
        */
       function scrollMap(position) {
-        var lat = 41.5560 //position.coords.latitude;
-        var lng = -72.6556 //position.coords.longitude;
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
         map.setCenter(new google.maps.LatLng(lat, lng));
 
         //TODO: load songs near position

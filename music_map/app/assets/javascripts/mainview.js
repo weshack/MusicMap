@@ -59,7 +59,6 @@ function(Y) {
     });
   }
 
-<<<<<<< HEAD
   function getNearbySongs(latLng, radius) {
     var latitude = latLng.lat(),
         longitude = latLng.lng();
@@ -76,9 +75,7 @@ function(Y) {
     Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius +
          "/song.json");
     }
-=======
 
->>>>>>> b8d7147affdd710bf8fcb1fb4d2f49ddb364e82a
 
   function postTag(e, latLng, infoWindow) {
     var songRec = e.result.raw,
