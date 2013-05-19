@@ -8,13 +8,13 @@
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQ84LjygbqhfMnk1OT5INZNttWhBn8Jd4&sensor=true">
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
-  <script> var uid = current_user.UID; </script>
+  <script> var UID = <%= current_user.uid %>; </script>
 </head>
 <body class="yui3-skin-sam">
 
 <div id="user_nav">
   <% if current_user %>
-      Signed in as <strong><%= current_user.name %>, 
+      Signed in as <strong><%= current_user.name %>,
           <%= current_user.uid %></strong>!
     <%= link_to "Sign out", signout_path, :id => "sign_out" %>
   <% else %>

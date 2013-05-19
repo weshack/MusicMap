@@ -20,7 +20,6 @@ function(Y) {
                        "<div class='song-info'>" +
                          "<div class='song-name'>{song}</div>" +
                          "{artist}<br>{album}<br>" +
-                         "<div class='address'>{address}</div>" +
                          "<a class='playpause' href='{stream_url}'>Play/Pause</a>"
                        "</div>" +
                      "</div>";
@@ -103,8 +102,11 @@ function(Y) {
       album: songRec.album,
       song: songRec.song,
       stream_url: songRec.stream_url,
-      art_url: songRec.art_url
+      art_url: songRec.art_url,
+      user: UID
     };
+
+    console.log(songTag);
     var cfg = {
       method: 'POST',
       data: Y.JSON.stringify(songTag),
