@@ -1,0 +1,133 @@
+html {
+	height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  font-family: Arial, "MS Trebuchet", sans-serif;
+  overflow: hidden;
+}
+
+#header {
+  width: 100%;
+  height: 80px;
+  border-bottom: 2px solid #CCC;
+  margin: 0px;
+}
+
+#map-canvas {
+  position: absolute;
+  top: 82px;
+  bottom: 0px;
+  left: 0px;
+  right: 350px;
+  z-index: 3;
+}
+
+#sidebar {
+  border-left: 2px solid #CCC;
+  right: 0px;
+  width: 348px;
+  position: absolute;
+  bottom: 0px;
+  top: 82px;
+  overflow: auto;
+
+  .nearby-songs {
+    padding: 15px;
+
+    .album-art {
+      width: 80px;
+      height: 80px;
+    }
+
+    .song {
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .song-info {
+      clear:both;
+      display: inline-block;
+      position: relative;
+      top: -10px;
+      left: 10px
+    }
+  }
+}
+
+#footer {
+  position: absolute;
+  bottom: 0px;
+  height: 100px;
+  border-top: 2px solid #CCC;
+  width: 100%;
+  z-index: 2;
+  padding-top: 15px;
+  box-sizing: border-box;
+
+  #play-slider {
+    height: 50px;
+    margin: 0px auto 0px auto;
+    width: 500px;
+  }
+}
+
+.songsearch {
+  width: 320px;
+  height: 70px;
+  padding-top: 5px;
+  padding-left: 5px;
+  font-size: 16px;
+  overflow-y: visible;
+  overflow-x: hidden;
+
+  .searchbox {
+    width: 250px;
+    height: 20px;
+    margin-top: 12px;
+    border: 1px solid #CCC;
+    padding: 5px;
+  }
+}
+
+.yui3-aclist-content {
+  background: white;
+  border: 1px solid #CCC;
+  width: 380px;
+  overflow: auto;
+
+  .yui3-aclist-item {
+    padding: 5px;
+    float: left;
+    line-height: 15px;
+
+    .album-art {
+      float: left;
+      width: 50px;
+      height: 50px;
+      margin-left: 5px
+    }
+
+    .song-info {
+      .song-name {
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 2px;
+        margin-top: 2px;
+      }
+
+      font-size: 10px;
+      float: left;
+      width: 300px;
+      padding-left: 15px;
+    }
+  }
+}
+
+.yui3-aclist-item-active, .yui3-aclist-item-hover {
+  background: #9aa5ff;
+}
+
