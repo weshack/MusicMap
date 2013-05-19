@@ -1,16 +1,34 @@
+<<<<<<< HEAD
+=======
+require 'sevendigital'
+
+>>>>>>> 90fe564ede639c668975dddec144951962723a04
 class SongsController < ApplicationController
 
   # GET /songtags
   # GET /songtags/json
   def songtags
     @songs = Song.all
-    
+
     respond_to do |format|
       format.html
       format.json { render :json => @songs }
     end
   end
 
+<<<<<<< HEAD
+=======
+  def songlib
+    client = Sevendigital::Client.new
+    query = params[:query]
+    query = client.track.search(query)
+    @json_list = (list_query(query))
+    respond_to do |format|
+      format.html
+      format.json { render :json => @json_list }
+    end
+  end
+>>>>>>> 90fe564ede639c668975dddec144951962723a04
 
   # GET /songs
   # GET /songs.json
@@ -68,8 +86,8 @@ class SongsController < ApplicationController
 
   # POST /songtags
   # POST /songtags.json
-  def songtags(json_object) 
-    client = client = Sevendigital::Client.new
+  def songtags(json_object)
+    client = Sevendigital::Client.new
     # Our has table
     h = JSON.parse json_object
     song_id = h["song_id"]
@@ -119,6 +137,7 @@ class SongsController < ApplicationController
   # GET /close_songs/:coord
   # GET /close_songs/:coord.json
   def show_close_songs
+<<<<<<< HEAD
     # finds all songs tagged within a .5 mile radius
     radius = 0.5
     lat = params[:lat].to_f #lat_lng_list[0].to_f
@@ -130,11 +149,62 @@ class SongsController < ApplicationController
       format.html { redirect_to root_path }
       format.json { render :json => @songs }
     end
+=======
+    @songs = Song.near(current_location, radius)
+>>>>>>> 90fe564ede639c668975dddec144951962723a04
   end
+
+  private
+    
+    def distance(a, b)
+      sq = a.zip(b).map{|a,b| (a-b) ** 2}
+      Math.sqrt(sq.inject(0) {|s,c| s + c})
+    end
+
+    # given a latitude(lat) and longitude(lng), return a list of 
 
   def set_geolocation
-    session[:location] = {:latitude => params[:latitude], 
+    session[:location] = {:latitude => params[:latitude],
                           :longitude => params[:longitude] }
   end
+    # given a latitude(lat) and longitude(lng), return a list of
+    # songs that were tagged near that
+    def surrounding_songs(lat, long)
+      radius = 0.000823
 
+      @close_songs = Song.where(distance([:latitude, :longitude], [lat, long]) < radius )
+    end
+
+  def list_query(query)
+    client = Sevendigital::Client.new
+    ret_list = []
+    if query.length < 20
+      for song in query
+        song_id = song.id
+        details = client.track.get_details(song_id)
+        artist = details.artist.name
+        title = details.title
+        album = details.release.title
+        stream_url = details.preview_url
+        art_url = details.release.image(100)
+        ret_list.push( { :song_id => song_id, :artist => artist,
+                         :album => album, :song => title,
+                         :stream_url => stream_url, :art_url => art_url } )
+      end
+    else
+      for i in 0..19
+        song_id = query[i].id
+        details = client.track.get_details(song_id)
+        artist = details.artist.name
+        title = details.title
+        album = details.release.title
+        stream_url = details.preview_url
+        art_url = details.release.image(100)
+        ret_list.push( { :song_id => song_id, :artist => artist,
+                         :album => album, :song => title,
+                         :stream_url => stream_url, :art_url => art_url } )
+      end
+    end
+    return ret_list
+  end
 end

@@ -3,7 +3,7 @@ YUI().use('node', 'gallery-player', 'autocomplete', 'gallery-modernizr', functio
   var INIT_ZOOM = 17;
   var SEARCH_TPL = "<div class='songsearch'>" +
                       "<div class='instructions'>Search for a song to " +
-                      "tag at this location" +
+                      "tag at this location:" +
                       "</div>" +
                       "<input class='searchbox' placeholder='Search...'>"
                     "</div>";
