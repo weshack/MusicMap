@@ -1,6 +1,8 @@
 MusicMap::Application.routes.draw do
   get "home/index"
 
+  post 'set_geolocation' => 'songs#set_geolocation'
+
   resources :songs
 
   match '/song_tags', :to => 'songs#show_close_songs'

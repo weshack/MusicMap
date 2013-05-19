@@ -1,4 +1,4 @@
-YUI().use('node', 'autocomplete', function(Y) {
+YUI().use('node', 'autocomplete', 'gallery-player', function(Y) {
   var WES_COORDS = new google.maps.LatLng(41.555577, -72.657437);
   var INIT_ZOOM = 17;
   var SEARCH_TPL = "<div class='songsearch'>" +
@@ -9,28 +9,27 @@ YUI().use('node', 'autocomplete', function(Y) {
                     "</div>";
 
   google.maps.visualRefresh = true;
+  var curSearchWindow = null;
 
   function tagSong(position, map) {
-    var marker = new google.maps.Marker({
-      position: position,
-      map: map
-    });
     map.panTo(position);
-    searchWindow = new google.maps.InfoWindow({
+    if (curSearchWindow !== null) {
+      curSearchWindow.close();
+    }
+
+    curSearchWindow = new google.maps.InfoWindow({
       content: SEARCH_TPL,
       position: position,
-      maxWidth: 500
+      maxWidth: 500,
+      pixelOffset: new google.maps.Size(0, 0)
     });
-    searchWindow.open(map);
-    // TODO: This is hacky. Why doesn't the DOM node exist immediately
-    // after the InfoWindow is created?
-    Y.later(300, Y, function() {
+    curSearchWindow.open(map);
+    google.maps.event.addListener(curSearchWindow, 'domready', function() {
       var ac = new Y.AutoComplete({
         inputNode: Y.one('.songsearch .searchbox'),
-        render: false,
-        source: ["We Found Love", "Can't Stop", "Ay Bay Bay"]
+        render: true,
+        source: ["We Found Love", "Can't Stop", "Ay Bay Bay"],
       });
-      ac.render();
       // TODO: This is super hacky. Try to find a better way to make
       // the autocomplete results drop below the InfoWindow.
       Y.one('.songsearch').get('parentNode')
@@ -38,8 +37,6 @@ YUI().use('node', 'autocomplete', function(Y) {
                           .get('parentNode')
                           .setStyle('overflow', 'visible')
     });
-
-
   }
 
   function initialize() {

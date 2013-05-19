@@ -1,5 +1,16 @@
+<script>
+  $(function() {
+    navigator.geolocation.getCurrentPosition(function(pos){
+      $.post('/set_geolocation', {latitude: pos.coords.latitude, 
+        longitude: pos.coords.longitude})
+    });
+  });
+</script>
+
+<div><%= session[:location] %></div>
+
 <div>
   <% @songs.each do |song| %>
-    <div><%= song.name %></div>
+    <div><%= song.song_id %></div>
   <% end %>
 </div>

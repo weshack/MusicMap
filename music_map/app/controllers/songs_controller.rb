@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 require 'sevendigital'
 
+=======
+<<<<<<< HEAD
+class SongsController < ApplicationController 
+=======
+>>>>>>> 52aa2972c5c9a07adb91b753391f721e7a2d5e17
 class SongsController < ApplicationController
 
   # GET /songtags
@@ -13,6 +19,7 @@ class SongsController < ApplicationController
     end
   end
 
+<<<<<<< HEAD
   def songlib
     client = Sevendigital::Client.new    
     query = params[:query]
@@ -23,6 +30,9 @@ class SongsController < ApplicationController
       format.json { render :json => @json_list }
     end
   end
+=======
+>>>>>>> 0fe7ff8b1448a70183a62fec3094dbbdfe9ee8b5
+>>>>>>> 52aa2972c5c9a07adb91b753391f721e7a2d5e17
 
   # GET /songs
   # GET /songs.json
@@ -129,17 +139,17 @@ class SongsController < ApplicationController
   end
 
   def show_close_songs
-
-    @songs = Song.near(current_location, radius)
+    radius = 0.5
+    location = [41.5560, -72.6556]
+    @songs = Song.near(session[:location], radius)
   end
 
-  private
-    
-    def distance(a, b)
-      sq = a.zip(b).map{|a,b| (a-b) ** 2}
-      Math.sqrt(sq.inject(0) {|s,c| s + c})
-    end
+  def set_geolocation
+    session[:location] = {:latitude => params[:latitude], 
+                          :longitude => params[:longitude] }
+  end
 
+<<<<<<< HEAD
     # given a latitude(lat) and longitude(lng), return a list of 
     # songs that were tagged near that
     def surrounding_songs(lat, long)
@@ -182,4 +192,6 @@ class SongsController < ApplicationController
   end
 
 
+=======
+>>>>>>> 52aa2972c5c9a07adb91b753391f721e7a2d5e17
 end
