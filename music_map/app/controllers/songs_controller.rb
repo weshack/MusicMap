@@ -6,7 +6,7 @@ class SongsController < ApplicationController
   # GET /songtags/json
   def songtags
     @songs = Song.all
-    
+
     respond_to do |format|
       format.html
       format.json { render :json => @songs }
@@ -14,7 +14,7 @@ class SongsController < ApplicationController
   end
 
   def songlib
-    client = Sevendigital::Client.new    
+    client = Sevendigital::Client.new
     query = params[:query]
     query = client.track.search(query)
     @json_list = (list_query(query))
@@ -80,7 +80,7 @@ class SongsController < ApplicationController
 
   # POST /songtags
   # POST /songtags.json
-  def songtags(json_object) 
+  def songtags(json_object)
     client = Sevendigital::Client.new
     # Our has table
     h = JSON.parse json_object
@@ -129,7 +129,6 @@ class SongsController < ApplicationController
   end
 
   def show_close_songs
-
     @songs = Song.near(current_location, radius)
   end
 
@@ -141,15 +140,21 @@ class SongsController < ApplicationController
     end
 
     # given a latitude(lat) and longitude(lng), return a list of 
+
+  def set_geolocation
+    session[:location] = {:latitude => params[:latitude],
+                          :longitude => params[:longitude] }
+  end
+    # given a latitude(lat) and longitude(lng), return a list of
     # songs that were tagged near that
     def surrounding_songs(lat, long)
       radius = 0.000823
-      
+
       @close_songs = Song.where(distance([:latitude, :longitude], [lat, long]) < radius )
     end
 
   def list_query(query)
-    client = Sevendigital::Client.new    
+    client = Sevendigital::Client.new
     ret_list = []
     if query.length < 20
       for song in query
@@ -160,7 +165,7 @@ class SongsController < ApplicationController
         album = details.release.title
         stream_url = details.preview_url
         art_url = details.release.image(100)
-        ret_list.push( { :song_id => song_id, :artist => artist, 
+        ret_list.push( { :song_id => song_id, :artist => artist,
                          :album => album, :song => title,
                          :stream_url => stream_url, :art_url => art_url } )
       end
@@ -173,13 +178,11 @@ class SongsController < ApplicationController
         album = details.release.title
         stream_url = details.preview_url
         art_url = details.release.image(100)
-        ret_list.push( { :song_id => song_id, :artist => artist, 
+        ret_list.push( { :song_id => song_id, :artist => artist,
                          :album => album, :song => title,
                          :stream_url => stream_url, :art_url => art_url } )
       end
     end
     return ret_list
   end
-
-
 end
