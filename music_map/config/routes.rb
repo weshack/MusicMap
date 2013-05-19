@@ -9,7 +9,7 @@ MusicMap::Application.routes.draw do
   resources :songs
 
   DECIMAL_PATTERN = /-?\d+(\.\d+)/.freeze
-  match '/close_songs/*lat/*lng/song', :to => 'songs#show_close_songs',
+  match '/close_songs/*lat/*lng/*rad/song', :to => 'songs#show_close_songs',
     :requirements => { :longitude => DECIMAL_PATTERN, 
     :latitude => DECIMAL_PATTERN }, :via => :get
   

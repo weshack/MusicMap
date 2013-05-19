@@ -208,7 +208,7 @@ function(Y) {
     curSearchWindow.open(map);
   }
 
-  function getNearbySongs(latLng) {
+  function getNearbySongs(latLng, radius) {
     var latitude = latLng.lat(),
         longitude = latLng.lng();
     Y.once('io:success', function(id, o, args) {
@@ -221,7 +221,8 @@ function(Y) {
       Y.one("#sidebar").setHTML(html);
     });
 
-    Y.io('/close_songs/' + latitude + '/' + longitude + "/song.json");
+    Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius +
+         "/song.json");
   }
 
   function placeRadius(position, map) {
@@ -239,8 +240,12 @@ function(Y) {
     };
     radiusCircle = new google.maps.Circle(circleOptions);
     google.maps.event.addListener(radiusCircle, 'center_changed', function() {
-      getNearbySongs(radiusCircle.center);
+      getNearbySongs(radiusCircle.center, radiusCircle.radius);
     });
+    google.maps.event.addListener(radiusCircle, 'radius_changed', function() {
+      getNearbySongs(radiusCircle.center, radiusCircle.radius);
+    });
+
   }
 
   function closeMarkerDisplay() {
