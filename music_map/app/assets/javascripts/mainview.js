@@ -1,5 +1,5 @@
 YUI().use('node', 'autocomplete', 'gallery-player',
-  'stylesheet', 'json', 'io',
+  'stylesheet', 'json', 'io', 'audio-player',
 function(Y) {
   var WES_COORDS = new google.maps.LatLng(41.555577, -72.657437);
   var INIT_ZOOM = 17;
@@ -15,12 +15,12 @@ function(Y) {
                         "{artist}<br>{album}" +
                       "</div>" +
                     "</div>";
-  var SONG_TAG_TPL = "<div class='song'>" +
+  var SONG_TAG_TPL = "<div class='marker-display'>" +
                        "<img class='album-art' src={art_url}>" +
                        "<div class='song-info'>" +
                          "<div class='song-name'>{song}</div>" +
                          "{artist}<br>{album}<br>" +
-                         "<a class='playpause' href='{stream_url}'>Play/Pause</a>"
+                         "<a class='playpause disabled' href='{stream_url}'>Play/Pause</a>"
                        "</div>" +
                      "</div>";
   var windowWidth, windowHeight;
@@ -28,38 +28,8 @@ function(Y) {
   var responsiveStyle = new Y.StyleSheet();
   var curSearchWindow = null;
   var curMarkerDisplay = null;
-  var audioPlayer = AudioPlayer();
+  var audioPlayer = new Y.AudioPlayer();
   google.maps.visualRefresh = true;
-
-  function AudioPlayer() {
-    var player = Y.Node.create("<audio></audio>").getDOMNode();
-    var isPlaying = false;
-    Y.one("body").append(player);
-    return {
-      setSource: function(src) {
-        player.src = src;
-      },
-
-      play: function() {
-        player.play();
-      },
-
-      pause: function() {
-        player.pause();
-      },
-
-      toggle: function() {
-        if (isPlaying) {
-          console.log("PAUSE");
-          this.pause();
-        }
-        else {
-          this.play();
-        }
-        isPlaying = !isPlaying;
-      }
-    }
-  }
 
   function resizeResponse() {
     var canvasHeight = parseInt(Y.one('#map-canvas').getComputedStyle('height'));
@@ -106,7 +76,6 @@ function(Y) {
       user: UID
     };
 
-    console.log(songTag);
     var cfg = {
       method: 'POST',
       data: Y.JSON.stringify(songTag),
@@ -184,7 +153,6 @@ function(Y) {
   }
 
   function closeMarkerDisplay() {
-    console.log("CLOSE");
     if (curMarkerDisplay !== null)
       curMarkerDisplay.close();
       audioPlayer.pause();
