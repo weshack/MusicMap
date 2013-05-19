@@ -12,6 +12,9 @@ MusicMap::Application.routes.draw do
   match '/songtagsall', :to => 'songs#sontagsall', :via => :get
   match '/songlib/:query', :to => 'songs#songlib', :via => :get
 
+  # For login
+  match '/auth/:provider/callback', :to => 'sessions#create'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -156,7 +156,7 @@ class SongsController < ApplicationController
   def list_query(query)
     client = Sevendigital::Client.new
     ret_list = []
-    if query.length < 20
+    if query.length < 7
       for song in query
         song_id = song.id
         details = client.track.get_details(song_id)
@@ -170,7 +170,7 @@ class SongsController < ApplicationController
                          :stream_url => stream_url, :art_url => art_url } )
       end
     else
-      for i in 0..19
+      for i in 0..6
         song_id = query[i].id
         details = client.track.get_details(song_id)
         artist = details.artist.name
