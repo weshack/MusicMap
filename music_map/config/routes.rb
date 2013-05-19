@@ -1,4 +1,6 @@
 MusicMap::Application.routes.draw do
+  resources :authentications
+
   get "home/index"
 
   post 'set_geolocation' => 'songs#set_geolocation'
@@ -9,7 +11,6 @@ MusicMap::Application.routes.draw do
   match '/songtags', :to => 'songs#songtags', :via => :post
   match '/songtagsall', :to => 'songs#sontagsall', :via => :get
   match '/songlib/:query', :to => 'songs#songlib', :via => :get
-
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
