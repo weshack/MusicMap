@@ -22,6 +22,7 @@ body {
   top: 83px;
   bottom: 100px;
   width: 100%;
+  z-index: 3;
 }
 
 #footer {
@@ -30,6 +31,7 @@ body {
   height: 100px;
   border-top: 2px solid #CCC;
   width: 100%;
+  z-index: 2;
 }
 
 .songsearch {
@@ -40,23 +42,47 @@ body {
   font-size: 16px;
   overflow-y: visible;
   overflow-x: hidden;
-}
 
-.songsearch .searchbox {
-  width: 250px;
-  height: 20px;
-  margin-top: 12px;
-  border: 1px solid #CCC;
-  padding: 5px;
+  .searchbox {
+    width: 250px;
+    height: 20px;
+    margin-top: 12px;
+    border: 1px solid #CCC;
+    padding: 5px;
+  }
 }
 
 .yui3-aclist-content {
   background: white;
   border: 1px solid #CCC;
-}
+  width: 380px;
 
-.yui3-aclist-item {
-  padding: 3px;
+  .yui3-aclist-item {
+    padding: 5px;
+    float: left;
+    line-height: 15px;
+
+    .album-art {
+      float: left;
+      width: 50px;
+      height: 50px;
+      margin-left: 5px
+    }
+
+    .song-info {
+      .song-name {
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 2px;
+        margin-top: 2px;
+      }
+
+      font-size: 10px;
+      float: left;
+      width: 300px;
+      padding-left: 15px;
+    }
+  }
 }
 
 .yui3-aclist-item-active, .yui3-aclist-item-hover {
