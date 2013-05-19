@@ -19,8 +19,8 @@ body {
 
 #map-canvas {
   position: absolute;
-  top: 83px;
-  bottom: 102px;
+  top: 101px;
+  bottom: 0px;
   width: 100%;
   z-index: 3;
 }
@@ -32,6 +32,14 @@ body {
   border-top: 2px solid #CCC;
   width: 100%;
   z-index: 2;
+  padding-top: 15px;
+  box-sizing: border-box;
+
+  #play-slider {
+    height: 50px;
+    margin: 0px auto 0px auto;
+    width: 500px;
+  }
 }
 
 .songsearch {
