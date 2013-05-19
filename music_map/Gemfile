@@ -31,6 +31,9 @@ gem '7digital'
 
 gem 'jquery-rails'
 gem 'geocoder'
+gem 'omniauth'
+gem 'omniauth-facebook'
+gem 'system_timer'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
@@ -46,3 +49,5 @@ gem 'geocoder'
 
 # To use debugger
 # gem 'ruby-debug'
+
+gem "mocha", :group => :test

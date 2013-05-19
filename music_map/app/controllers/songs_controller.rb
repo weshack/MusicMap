@@ -1,5 +1,8 @@
+<<<<<<< HEAD
+=======
 require 'sevendigital'
 
+>>>>>>> 90fe564ede639c668975dddec144951962723a04
 class SongsController < ApplicationController
 
   # GET /songtags
@@ -13,6 +16,8 @@ class SongsController < ApplicationController
     end
   end
 
+<<<<<<< HEAD
+=======
   def songlib
     client = Sevendigital::Client.new
     query = params[:query]
@@ -23,6 +28,7 @@ class SongsController < ApplicationController
       format.json { render :json => @json_list }
     end
   end
+>>>>>>> 90fe564ede639c668975dddec144951962723a04
 
   # GET /songs
   # GET /songs.json
@@ -128,8 +134,24 @@ class SongsController < ApplicationController
     end
   end
 
+  # GET /close_songs/:coord
+  # GET /close_songs/:coord.json
   def show_close_songs
+<<<<<<< HEAD
+    # finds all songs tagged within a .5 mile radius
+    radius = 0.5
+    lat = params[:lat].to_f #lat_lng_list[0].to_f
+    lng = params[:lng].to_f #lat_lng_list[1].to_f
+    location = [lat, lng]
+    @songs = Song.near(location, radius)
+
+    respond_to do |format|
+      format.html { redirect_to root_path }
+      format.json { render :json => @songs }
+    end
+=======
     @songs = Song.near(current_location, radius)
+>>>>>>> 90fe564ede639c668975dddec144951962723a04
   end
 
   private
@@ -156,7 +178,7 @@ class SongsController < ApplicationController
   def list_query(query)
     client = Sevendigital::Client.new
     ret_list = []
-    if query.length < 20
+    if query.length < 7
       for song in query
         song_id = song.id
         details = client.track.get_details(song_id)
@@ -170,7 +192,7 @@ class SongsController < ApplicationController
                          :stream_url => stream_url, :art_url => art_url } )
       end
     else
-      for i in 0..19
+      for i in 0..6
         song_id = query[i].id
         details = client.track.get_details(song_id)
         artist = details.artist.name

@@ -1,15 +1,19 @@
 MusicMap::Application.routes.draw do
+  resources :authentications
+
   get "home/index"
 
   post 'set_geolocation' => 'songs#set_geolocation'
 
   resources :songs
 
-  match '/song_tags', :to => 'songs#show_close_songs'
+  match '/close_songs(/:lat(/:lng))', :to => 'songs#show_close_songs', :via => :get
   match '/songtags', :to => 'songs#songtags', :via => :post
   match '/songtagsall', :to => 'songs#sontagsall', :via => :get
   match '/songlib/:query', :to => 'songs#songlib', :via => :get
 
+  # For login
+  match '/auth/:provider/callback', :to => 'sessions#create'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
