@@ -15,16 +15,16 @@ function(Y) {
                         "{artist}<br>{album}" +
                       "</div>" +
                     "</div>";
-  var SONG_TAG_TPL = "<div class='song'>" +
-                       "<img class='album-art' src={art_url}>" +
-                       "<div class='song-info'>" +
-                         "<div class='song-name'>{song}</div>" +
-                         "{artist}<br>{album}<br>" +
-                         "<a class='playpause' href='{stream_url}'>Play/Pause</a>"
-                       "</div>" +
+  var SONG_TAG_TPL = "<div class='song'>\n" +
+                       "<img class='album-art' src={art_url}>\n" +
+                       "<div class='song-info'>\n" +
+                         "<div class='song-name'>{song}</div>\n" +
+                         "{artist}<br>{album}<br>\n" +
+                         "<a class='playpause' href='{stream_url}'>Play/Pause</a>\n" +
+                       "</div>\n" +
                      "</div>";
   var windowWidth, windowHeight;
-  var map;
+  var map, radiusCircle;
   var responsiveStyle = new Y.StyleSheet();
   var curSearchWindow = null;
   var curMarkerDisplay = null;
@@ -32,35 +32,64 @@ function(Y) {
   google.maps.visualRefresh = true;
 
   function AudioPlayer() {
-    var player = Y.Node.create("<audio></audio>").getDOMNode();
+    var player = Y.Node.create("<audio></audio>");
+    var domNode = player.getDOMNode();
     var isPlaying = false;
+    var canPlay = false;
+    var curSrc = null;
+    var controller;
     Y.one("body").append(player);
+    player.on('canplay', function() {
+      canPlay = true;
+    });
     return {
       setSource: function(src) {
-        player.src = src;
+        if (curSrc !== src) {
+          curSrc = src;
+          player.set('src', curSrc);
+          canPlay = false;
+        }
+      },
+
+      getSource: function() {
+        return curSrc;
+      },
+
+      getController: function() {
+        return controller;
       },
 
       play: function() {
-        player.play();
+        domNode.play();
       },
 
       pause: function() {
-        player.pause();
+        domNode.pause();
       },
 
-      toggle: function() {
+      toggle: function(controlId) {
+        controller = controlId;
         if (isPlaying) {
-          console.log("PAUSE");
-          this.pause();
+          domNode.pause();
+          isPlaying = false;
         }
         else {
-          this.play();
+          if (canPlay) {
+            this.play();
+            isPlaying = true;
+          }
+          else {
+            domNode.addEventListener('canplay', function() {
+              canPlay = true;
+              this.play();
+              domNode.removeEventListener('canplay', this);
+              isPlaying = true;
+            });
+          }
         }
-        isPlaying = !isPlaying;
       }
     }
   }
-
   function resizeResponse() {
     var canvasHeight = parseInt(Y.one('#map-canvas').getComputedStyle('height'));
     responsiveStyle.set('#map-canvas .yui3-aclist .yui3-aclist-content', {
@@ -90,6 +119,18 @@ function(Y) {
     });
   }
 
+  function songTagFormatter(songTag) {
+    var max_len = 37;
+    return Y.Lang.sub(SONG_TAG_TPL, {
+      art_url: songTag.art_url,
+      song: ellipsize(songTag.song, max_len),
+      artist: ellipsize(songTag.artist, max_len),
+      album: ellipsize(songTag.album, max_len),
+      address: songTag.address,
+      stream_url: songTag.stream_url
+    });
+  }
+
   function postTag(e, latLng, infoWindow) {
     var songRec = e.result.raw,
         latitude = latLng.lat(),
@@ -106,7 +147,6 @@ function(Y) {
       user: UID
     };
 
-    console.log(songTag);
     var cfg = {
       method: 'POST',
       data: Y.JSON.stringify(songTag),
@@ -168,6 +208,23 @@ function(Y) {
     curSearchWindow.open(map);
   }
 
+  function getNearbySongs(latLng) {
+    var latitude = latLng.lat(),
+        longitude = latLng.lng();
+    Y.once('io:success', function(id, o, args) {
+      nearbySongs = Y.JSON.parse(o.responseText);//.slice(0, 1);
+      html = "<div class='nearby-songs'>";
+      nearbySongs.forEach(function(songTag) {
+        html += songTagFormatter(songTag);
+      });
+      html += "</div>";
+      Y.one("#sidebar").setHTML(html);
+      console.log(html);
+    });
+
+    Y.io('/close_songs/' + Math.floor(latitude) + '/' + Math.floor(longitude) + ".json");
+  }
+
   function placeRadius(position, map) {
      var circleOptions = {
       strokeColor: '#FF0000',
@@ -178,31 +235,24 @@ function(Y) {
       map: map,
       center: position,
       radius: 27.432,
+      editable: true,
       draggable: true
     };
-    circle = new google.maps.Circle(circleOptions);
+    radiusCircle = new google.maps.Circle(circleOptions);
+    google.maps.event.addListener(radiusCircle, 'click', function() {
+      getNearbySongs(radiusCircle.center);
+    });
   }
 
   function closeMarkerDisplay() {
-    console.log("CLOSE");
     if (curMarkerDisplay !== null)
       curMarkerDisplay.close();
-      audioPlayer.pause();
   }
 
   function makeMarkerCallback(songTag, latLng) {
     return function() {
       var max_len = 37;
-      var content = Y.Node.create(
-        Y.Lang.sub(SONG_TAG_TPL, {
-          art_url: songTag.art_url,
-          song: ellipsize(songTag.song, max_len),
-          artist: ellipsize(songTag.artist, max_len),
-          album: ellipsize(songTag.album, max_len),
-          address: songTag.address,
-          stream_url: songTag.stream_url
-        })
-      );
+      var content = Y.Node.create(songTagFormatter(songTag));
       closeMarkerDisplay();
       curMarkerDisplay = new google.maps.InfoWindow({
         content: content.getDOMNode(),
@@ -210,16 +260,11 @@ function(Y) {
         maxWidth: 500,
       });
       curMarkerDisplay.open(map);
-      Y.later(300, this, function() {
-          audioPlayer.pause();
-          audioPlayer.setSource(songTag.stream_url);
-          content.one('.playpause').on('click', function(e) {
-            e.preventDefault();
-            audioPlayer.toggle();
-          });
-      });
       google.maps.event.addListener(curMarkerDisplay, 'closeclick', function() {
-        audioPlayer.pause();
+        console.log(audioPlayer.getController());
+        if (audioPlayer.getController() === content.one('.playpause').get('id')) {
+          audioPlayer.pause();
+        }
       });
     }
   }
@@ -234,7 +279,7 @@ function(Y) {
 
     map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
-    Y.once("io:complete", function(id, o, args) {
+    Y.once('io:success', function(id, o, args) {
       var songTags = Y.JSON.parse(o.responseText);
       for (var i = 0; i < songTags.length; i++) {
         var songTag = songTags[i];
@@ -257,5 +302,10 @@ function(Y) {
 
   Y.one('window').on('resize', resizeResponse);
   Y.one('window').on('load', initMap);
+  Y.one('body').delegate('click', function(e) {
+      e.preventDefault();
+      audioPlayer.setSource(e.currentTarget.get('href'));
+      audioPlayer.toggle(e.currentTarget.get('id'));
+  }, '.playpause');
   resizeResponse();
 });
