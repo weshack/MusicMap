@@ -11,12 +11,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130519044320) do
+ActiveRecord::Schema.define(:version => 20130519183950) do
 
   create_table "songs", :force => true do |t|
     t.string   "user"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.float    "latitude"
     t.float    "longitude"
     t.string   "address"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 20130519044320) do
     t.string   "song"
     t.string   "stream_url"
     t.string   "art_url"
+    t.string   "facebook_url"
   end
 
   create_table "users", :force => true do |t|

@@ -57,6 +57,10 @@ class SongsController < ApplicationController
   # POST /songs
   # POST /songs.json
   def create
+    pic_url = nil
+    unless params[:user].nil?
+      pic_url = "https://graph.facebook.com/#{params[:user]}/picture?type=normal"
+    end
     @song = Song.new ( { :song => params[:song],
     :artist => params[:artist],
     :album => params[:album],
@@ -65,7 +69,8 @@ class SongsController < ApplicationController
     :latitude => params[:latitude],
     :stream_url => params[:stream_url],
     :art_url => params[:art_url],
-    :user => params[:user]
+    :user => params[:user],
+    :facebook_url => pic_url
     } )
 
     respond_to do |format|
