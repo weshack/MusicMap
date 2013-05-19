@@ -245,7 +245,6 @@ function(Y) {
     google.maps.event.addListener(radiusCircle, 'radius_changed', function() {
       getNearbySongs(radiusCircle.center, radiusCircle.radius);
     });
-
   }
 
   function closeMarkerDisplay() {
@@ -284,6 +283,7 @@ function(Y) {
     map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
     Y.once('io:success', function(id, o, args) {
+      console.log(o.responseText);
       var songTags = Y.JSON.parse(o.responseText);
       for (var i = 0; i < songTags.length; i++) {
         var songTag = songTags[i];
