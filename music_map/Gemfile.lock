@@ -62,12 +62,11 @@ GEM
       treetop (~> 1.4.8)
     metaclass (0.0.1)
     mime-types (1.23)
-    mocha (0.13.3)
+    mocha (0.14.0)
       metaclass (~> 0.0.1)
     multi_json (1.7.3)
     multipart-post (1.2.0)
     mysql (2.9.1)
-    nifty-generators (0.4.6)
     nokogiri (1.5.9)
     oauth (0.4.7)
     oauth2 (0.8.1)
@@ -143,7 +142,6 @@ DEPENDENCIES
   json
   mocha
   mysql
-  nifty-generators
   omniauth
   omniauth-facebook
   rails (= 3.2.13)
