@@ -59,6 +59,22 @@ function(Y) {
     });
   }
 
+  function getNearbySongs(latLng, radius) {
+    var latitude = latLng.lat(),
+        longitude = latLng.lng();
+    Y.once('io:success', function(id, o, args) {
+      nearbySongs = Y.JSON.parse(o.responseText);//.slice(0, 1);
+      html = "<div class='nearby-songs'>";
+      nearbySongs.forEach(function(songTag) {
+        html += Y.songTagFormatter(songTag);
+      });
+      html += "</div>";
+      Y.one("#sidebar").setHTML(html);
+    });
+
+    Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius +
+         "/song.json");
+    }
 
 
   function postTag(e, latLng, infoWindow) {
@@ -154,10 +170,10 @@ function(Y) {
     };
     radiusCircle = new google.maps.Circle(circleOptions);
     google.maps.event.addListener(radiusCircle, 'center_changed', function() {
-      Y.getNearbySongs(radiusCircle.center, radiusCircle.radius);
+      getNearbySongs(radiusCircle.center, radiusCircle.radius);
     });
     google.maps.event.addListener(radiusCircle, 'radius_changed', function() {
-      Y.getNearbySongs(radiusCircle.center, radiusCircle.radius);
+      getNearbySongs(radiusCircle.center, radiusCircle.radius);
     });
   }
 
@@ -216,7 +232,7 @@ function(Y) {
     });
     google.maps.event.addListener(map, 'click', closeMarkerDisplay);
     placeRadius(WES_COORDS, map);
-    Y.getNearbySongs(WES_COORDS, 27.432);
+    getNearbySongs(WES_COORDS, 27.432);
   }
 
   Y.one('window').on('resize', resizeResponse);
