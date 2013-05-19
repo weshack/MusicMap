@@ -59,21 +59,23 @@ function(Y) {
       song_id: songRec.song_id,
       artist: songRec.artist,
       album: songRec.album,
-      song: songRec.song
+      song: songRec.song,
+      stream_url: songRec.stream_url,
+      art_url: songRec.art_url
     };
     var cfg = {
       method: 'POST',
-      data: JSON.stringify(tagAttrs),
+      data: Y.JSON.stringify(tagAttrs),
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
       on: {
         complete: function(e) {
           alert('It Worked!');
         }
       }
     };
-    var request = Y.io('/create');
+    var request = Y.io('/create', cfg);
   }
 
   function tagSong(position, map) {
