@@ -140,7 +140,7 @@ class SongsController < ApplicationController
       format.html { redirect_to root_path }
       format.json { render :json => @songs }
     end
-    @songs = Song.near(current_location, radius)
+    @songs = Song.near(location, radius)
   end
 
   private
