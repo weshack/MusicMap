@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-class SongsController < ApplicationController 
-=======
 class SongsController < ApplicationController
 
   # GET /songtags
@@ -14,7 +11,6 @@ class SongsController < ApplicationController
     end
   end
 
->>>>>>> 0fe7ff8b1448a70183a62fec3094dbbdfe9ee8b5
 
   # GET /songs
   # GET /songs.json

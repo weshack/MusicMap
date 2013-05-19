@@ -1,4 +1,4 @@
-YUI().use('node', 'autocomplete', function(Y) {
+YUI().use('node', 'gallery-player', 'autocomplete', function(Y) {
   var WES_COORDS = new google.maps.LatLng(41.555577, -72.657437);
   var INIT_ZOOM = 17;
   var SEARCH_TPL = "<div class='songsearch'>" +
@@ -53,6 +53,25 @@ YUI().use('node', 'autocomplete', function(Y) {
     google.maps.event.addListener(map, 'click', function(e) {
       tagSong(e.latLng, map);
     });
+  }
+
+  var player = new Y.Player({
+    contentBox: '#video'
+  });
+  //player.render();
+  //player.focus();
+
+  function get_lat_lng(position) {
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+  }
+
+  function get_location() {
+    if (Modernizr.geolocation) {
+      navigator.geolocation.getCurrentPosition(show_map);
+    } else {
+      // TODO: what to do when browser doesn't support geolocation
+    }
   }
 
   Y.on('domready', initialize);
