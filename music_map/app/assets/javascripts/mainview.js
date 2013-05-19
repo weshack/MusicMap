@@ -16,6 +16,7 @@ function(Y) {
                       "</div>" +
                     "</div>";
   var windowWidth, windowHeight;
+  var map;
   var responsiveStyle = new Y.StyleSheet();
   var curSearchWindow = null;
   google.maps.visualRefresh = true;
@@ -49,7 +50,7 @@ function(Y) {
     });
   }
 
-  function postTag(e, position) {
+  function postTag(e, position, infoWindow) {
     var songRec = e.result.raw,
         latitude = position.lat(),
         longitude = position.lng();
@@ -70,8 +71,18 @@ function(Y) {
         'Content-Type': 'application/json'
       },
       on: {
-        complete: function(e) {
-          alert('It Worked!');
+        success: function(e) {
+          curSearchWindow.close();
+          var marker = new google.maps.Marker({
+            position: position,
+            map: map,
+            title: songRec.song,
+            animation: google.maps.Animation.DROP,
+          });
+        },
+        failure: function(e){
+          curSearchWindow.close();
+          alert("An error occured while attempting to tag your song. Please try again later.");
         }
       }
     };
@@ -113,23 +124,50 @@ function(Y) {
     curSearchWindow.open(map);
   }
 
-  function initialize() {
+  function initMap() {
     var mapOptions = {
       center: WES_COORDS,
       zoom: INIT_ZOOM,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
-    var map = new google.maps.Map(document.getElementById('map-canvas'),
+    map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
     google.maps.event.addListener(map, 'click', function(e) {
       tagSong(e.latLng, map);
     });
-    var playSlider = new Y.Slider();
-    playSlider.render("#play-slider");
   }
 
-  Y.on('domready', initialize);
-  Y.one('window').on('resize', resizeResponse)
+  function initAudioPlayer() {
+    // scale = 10000;
+    // var playSlider = new Y.Slider({
+    //   length: '500px',
+    //   min: 0,
+    //   max: scale
+    // });
+    // playSlider.render('#play-slider');
+    // var player = Y.one('#audio-player').getDOMNode();
+    // player.src = "http://previews.7digital.com/clips/480/28905854.clip.mp3";
+    // player.addEventListener('loadedmetadata', function() {
+    //    duration = player.duration;
+    //    // player.addEventListener('timeupdate', function(e) {
+    //    //   curTime = player.currentTime;
+    //    //   playSlider.setValue(Math.floor(scale*curTime/duration));
+    //    // });
+    //    playSlider.on('slideEnd', function(e) {
+    //      // console.log(playSlider.get('value'));
+    //      songTime = playSlider.get('value')/scale * player.duration;
+    //      console.log(songTime);
+    //      player.pause();
+    //      player.currentTime = Math.floor(songTime);
+    //      console.log(player.currentTime);
+    //      player.play();
+    //    });
+    // });
+  }
+
+  Y.on('domready', initAudioPlayer);
+  Y.one('window').on('resize', resizeResponse);
+  Y.one('window').on('load', initMap);
   resizeResponse();
 });
