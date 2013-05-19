@@ -91,11 +91,11 @@ function(Y) {
     });
   }
 
-  function postTag(e, position, infoWindow) {
+  function postTag(e, latLng, infoWindow) {
     var songRec = e.result.raw,
-        latitude = position.lat(),
-        longitude = position.lng();
-    var tagAttrs = {
+        latitude = latLng.lat(),
+        longitude = latLng.lng();
+    var songTag = {
       longitude: longitude,
       latitude: latitude,
       song_id: songRec.song_id,
@@ -107,7 +107,7 @@ function(Y) {
     };
     var cfg = {
       method: 'POST',
-      data: Y.JSON.stringify(tagAttrs),
+      data: Y.JSON.stringify(songTag),
       headers: {
         'Content-Type': 'application/json'
       },
@@ -115,11 +115,12 @@ function(Y) {
         success: function(e) {
           curSearchWindow.close();
           var marker = new google.maps.Marker({
-            position: position,
+            position: latLng,
             map: map,
             title: songRec.song,
             animation: google.maps.Animation.DROP,
           });
+          google.maps.event.addListener(marker, 'click', makeMarkerCallback(songTag, latLng));
         },
         failure: function(e){
           curSearchWindow.close();
@@ -160,7 +161,7 @@ function(Y) {
       Y.one('.songsearch').get('parentNode')
                           .setStyle('overflowX', 'hidden')
                           .get('parentNode')
-                          .setStyle('overflow', 'visible')
+                          .setStyle('overflow', 'visible');
     });
     curSearchWindow.open(map);
   }
