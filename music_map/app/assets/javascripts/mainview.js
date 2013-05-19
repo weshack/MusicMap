@@ -219,7 +219,6 @@ function(Y) {
       });
       html += "</div>";
       Y.one("#sidebar").setHTML(html);
-      console.log(html);
     });
 
     Y.io('/close_songs/' + latitude + '/' + longitude + "/song.json");
@@ -239,7 +238,7 @@ function(Y) {
       draggable: true
     };
     radiusCircle = new google.maps.Circle(circleOptions);
-    google.maps.event.addListener(radiusCircle, 'click', function() {
+    google.maps.event.addListener(radiusCircle, 'center_changed', function() {
       getNearbySongs(radiusCircle.center);
     });
   }
@@ -298,6 +297,7 @@ function(Y) {
     });
     google.maps.event.addListener(map, 'click', closeMarkerDisplay);
     placeRadius(WES_COORDS, map);
+    getNearbySongs(WES_COORDS);
   }
 
   Y.one('window').on('resize', resizeResponse);
