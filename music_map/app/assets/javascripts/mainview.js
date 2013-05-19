@@ -114,6 +114,7 @@ function(Y) {
       on: {
         success: function(e) {
           curSearchWindow.close();
+          console.log(position);
           var marker = new google.maps.Marker({
             position: position,
             map: map,
