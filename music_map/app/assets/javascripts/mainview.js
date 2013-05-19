@@ -302,7 +302,7 @@ function(Y) {
     });
     google.maps.event.addListener(map, 'click', closeMarkerDisplay);
     placeRadius(WES_COORDS, map);
-    getNearbySongs(WES_COORDS);
+    getNearbySongs(WES_COORDS, 27.432);
   }
 
   Y.one('window').on('resize', resizeResponse);
