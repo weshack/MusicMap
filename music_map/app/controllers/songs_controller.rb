@@ -64,7 +64,7 @@ class SongsController < ApplicationController
     :latitude => params[:latitude],
     :stream_url => params[:stream_url],
     :art_url => params[:art_url],
-    :user => current_user
+    :user => "Julian"
     } )
 
     respond_to do |format|
