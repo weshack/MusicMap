@@ -1,4 +1,4 @@
-YUI().use('node', 'autocomplete', 'gallery-player', function(Y) {
+YUI().use('node', 'gallery-player', 'autocomplete', 'gallery-modernizr', function(Y) {
   var WES_COORDS = new google.maps.LatLng(41.555577, -72.657437);
   var INIT_ZOOM = 17;
   var SEARCH_TPL = "<div class='songsearch'>" +
@@ -39,6 +39,15 @@ YUI().use('node', 'autocomplete', 'gallery-player', function(Y) {
     });
   }
 
+  function get_lat_lng(position) {
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    var xhr = new XMLHttpRequest();
+    var base_url = "localhost:3000/close_songs/";
+    var url = base_url + Math.round(latitude) + "/" + Math.round(longitude) + ".json";
+    xhr.open("GET", url);
+  }
+
   function initialize() {
     var mapOptions = {
       center: WES_COORDS,
@@ -50,7 +59,14 @@ YUI().use('node', 'autocomplete', 'gallery-player', function(Y) {
     google.maps.event.addListener(map, 'click', function(e) {
       tagSong(e.latLng, map);
     });
+
+    //navigator.geolocation.getCurrentPosition(get_lat_lng);
+
   }
+
+  
+
+  
 
   Y.on('domready', initialize);
 });
