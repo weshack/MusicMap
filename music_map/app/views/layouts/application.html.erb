@@ -7,8 +7,8 @@
   <%= stylesheet_link_tag 'mobile' if mobile_device? %>
   <script src="http://yui.yahooapis.com/3.10.1/build/yui/yui-min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQ84LjygbqhfMnk1OT5INZNttWhBn8Jd4&sensor=true"></script>
-    <%= javascript_include_tag 'common' %>
-    <%= javascript_include_tag 'mainview' %>
+    <script src='/assets/common.js'></script>
+    <script src='/assets/mainview.js'></script>
   <% if current_user %>
     <script>var UID = <%= current_user.uid %>;</script>
   <% else %>
