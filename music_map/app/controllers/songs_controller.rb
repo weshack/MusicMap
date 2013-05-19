@@ -1,20 +1,15 @@
-<<<<<<< HEAD
-class SongsController < ApplicationController 
-=======
 class SongsController < ApplicationController
 
   # GET /songtags
   # GET /songtags/json
   def songtags
     @songs = Song.all
-    
+
     respond_to do |format|
       format.html
       format.json { render :json => @songs }
     end
   end
-
->>>>>>> 0fe7ff8b1448a70183a62fec3094dbbdfe9ee8b5
 
   # GET /songs
   # GET /songs.json
@@ -72,7 +67,7 @@ class SongsController < ApplicationController
 
   # POST /songtags
   # POST /songtags.json
-  def songtags(json_object) 
+  def songtags(json_object)
     client = client = Sevendigital::Client.new
     # Our has table
     h = JSON.parse json_object
@@ -127,7 +122,7 @@ class SongsController < ApplicationController
   end
 
   def set_geolocation
-    session[:location] = {:latitude => params[:latitude], 
+    session[:location] = {:latitude => params[:latitude],
                           :longitude => params[:longitude] }
   end
 
