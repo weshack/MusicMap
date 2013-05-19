@@ -2,7 +2,6 @@ require 'sevendigital'
 
 class SongsController < ApplicationController
 
-
   def songlib
     client = Sevendigital::Client.new
     query = params[:query]
@@ -52,28 +51,30 @@ class SongsController < ApplicationController
     @song = Song.find(params[:id])
   end
 
+
+
   # POST /songs
   # POST /songs.json
-    def create
-      @song = Song.new ( { :song => params[:song],
-      :artist => params[:artist],
-      :album => params[:album],
-      :song_id => params[:song_id],
-      :longitude => params[:longitude],
-      :latitude => params[:latitude],
-      :stream_url => params[:stream_url],
-      :art_url => params[:art_url] } )
-      #@song.user = current_user.name
+  def create
+    @song = Song.new ( { :song => params[:song],
+    :artist => params[:artist],
+    :album => params[:album],
+    :song_id => params[:song_id],
+    :longitude => params[:longitude],
+    :latitude => params[:latitude],
+    :stream_url => params[:stream_url],
+    :art_url => params[:art_url],
+    :user => current_user
+    } )
 
-
-      respond_to do |format|
-        if @song.save
-          format.json { render :json => @song, :status => :created, :location => @song }
-        else
-          format.json { render :json => @song.errors, :status => :unprocessable_entity }
-        end
+    respond_to do |format|
+      if @song.save
+        format.json { render :json => @song, :status => :created, :location => @song }
+      else
+        format.json { render :json => @song.errors, :status => :unprocessable_entity }
       end
     end
+  end
 
   # POST /songtags
   # POST /songtags.json
@@ -195,4 +196,5 @@ class SongsController < ApplicationController
     end
     return ret_list
   end
+
 end
