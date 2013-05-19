@@ -181,8 +181,10 @@ function(Y) {
   }
 
   function closeMarkerDisplay() {
+    console.log("CLOSE");
     if (curMarkerDisplay !== null)
-      curMarkerDisplay.close()
+      curMarkerDisplay.close();
+      audioPlayer.pause();
   }
 
   function makeMarkerCallback(songTag, latLng) {
@@ -198,9 +200,8 @@ function(Y) {
           stream_url: songTag.stream_url
         })
       );
-
       closeMarkerDisplay();
-      var curMarkerDisplay = new google.maps.InfoWindow({
+      curMarkerDisplay = new google.maps.InfoWindow({
         content: content.getDOMNode(),
         position: latLng,
         maxWidth: 500,
@@ -248,7 +249,7 @@ function(Y) {
       tagSong(e.latLng, map);
     });
     google.maps.event.addListener(map, 'click', closeMarkerDisplay);
-    placeRadius(WES_COORDS, map)
+    placeRadius(WES_COORDS, map);
   }
 
   Y.one('window').on('resize', resizeResponse);
