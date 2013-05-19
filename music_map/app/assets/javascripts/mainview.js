@@ -49,6 +49,8 @@ function(Y) {
       position: position,
       maxWidth: 500,
     });
+    // The domready event listener should be the better way to do this,
+    // but it doesn't reliably fire the event. So I just wait a bit.
     Y.later(300, Y, function() {
     // google.maps.event.addListener(curSearchWindow, 'domready', function() {
       var ac = new Y.AutoComplete({
