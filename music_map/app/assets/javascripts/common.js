@@ -87,6 +87,7 @@ YUI.add('common', function(Y) {
    
 
    Y.getNearbyMobile = function(latLng, radius) {
+     console.log(latLng);
       var latitude = latLng.lat(),
           longitude = latLng.lng();
       Y.once('io:success', function(id, o, args) {

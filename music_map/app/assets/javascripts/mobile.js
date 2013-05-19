@@ -36,20 +36,16 @@ YUI().use('node', 'common', 'json', 'io',
         map.setCenter(new google.maps.LatLng(lat, lng));
 
         //TODO: load songs near position
-        Y.getNearbyMobile(map.getCenter, 50);
+        Y.getNearbyMobile(map.getCenter(), 50);
       }
 
-      var watchId = navigator.geolocation.watchPosition(scrollMap);
-
-      function ButtonClickHandler() {
-        navigator.geolocation.clearWatch(watchId);
-      }
-       
+      var watchId = navigator.geolocation.watchPosition(scrollMap);       
 
       function initialize() {
         navigator.geolocation.getCurrentPosition(show_map);          
       }
       
       Y.one('window').on('load', initialize);
+      Y.one('window').on('close', navigator.geolocation.clearWatch(watchId));
 
     });
