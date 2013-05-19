@@ -214,22 +214,28 @@ function(Y) {
 
     map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
-    Y.once('io:complete', function(id, o, args) {
-      console.log(o.responseText);
-      var songTags = Y.JSON.parse(o.responseText);
-      for (var i = 0; i < songTags.length; i++) {
-        var songTag = songTags[i];
-        var latLng = new google.maps.LatLng(songTag.latitude, songTag.longitude);
-        var marker = new google.maps.Marker({
-            position: latLng,
-            map: map,
-            animation: google.maps.Animation.DROP,
-        });
-        console.log(marker);
-        google.maps.event.addListener(marker, 'click', makeMarkerCallback(songTag, latLng));
+
+    var cfg = {
+      method: 'GET',
+      on: {
+        complete: function(id, o, args) {
+          console.log(o.responseText);
+          var songTags = Y.JSON.parse(o.responseText);
+            for (var i = 0; i < songTags.length; i++) {
+              var songTag = songTags[i];
+              var latLng = new google.maps.LatLng(songTag.latitude, songTag.longitude);
+              var marker = new google.maps.Marker({
+              position: latLng,
+              map: map,
+              animation: google.maps.Animation.DROP,
+            });
+            console.log(marker);
+            google.maps.event.addListener(marker, 'click', makeMarkerCallback(songTag, latLng));
+          }
+        }
       }
-    });
-    Y.io("/songs.json");
+    };
+    var request = Y.io("/songs.json", cfg);
     google.maps.event.addListener(map, 'dblclick', function(e) {
       tagSong(e.latLng, map);
     });
