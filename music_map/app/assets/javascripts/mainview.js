@@ -133,6 +133,19 @@ function(Y) {
 
     map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
+    Y.on("io:complete", function(id, o, args) {
+      var songTags = Y.JSON.parse(o.responseText);
+      for (var i = 0; i < songTags.length; i++) {
+        var songTag = songTags[i];
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(songTag.latitude, songTag.longitude),
+          map: map,
+          title: "a song",
+          animation: google.maps.Animation.DROP,
+        });
+      }
+    });
+    Y.io("/songs.json");
     google.maps.event.addListener(map, 'click', function(e) {
       tagSong(e.latLng, map);
     });
