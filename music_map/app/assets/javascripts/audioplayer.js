@@ -1,31 +1,63 @@
 YUI.add('audio-player', function(Y) {
-	Y.AudioPlayer = Y.Base.create('audioPlayer', Y.Base, [], {
-	    initializer: function(cfg) {
-	      this._player = Y.Node.create('<audio></audio>').getDOMNode();
-	      this._isPlaying = false;
-	      Y.one('body').append(player);
-	    },
+	Y.AudioPlayer = function() {
+		var player = Y.Node.create("<audio></audio>");
+		var domNode = player.getDOMNode();
+		var isPlaying = false;
+		var canPlay = false;
+		var curSrc = null;
+		var controller;
+		Y.one("body").append(player);
+		player.on('canplay', function() {
+		  canPlay = true;
+		});
+		return {
+		  setSource: function(src) {
+		    if (curSrc !== src) {
+		      curSrc = src;
+		      player.set('src', curSrc);
+		      canPlay = false;
+		    }
+		  },
 
-	    setSource: function(src) {
-	      this_player.src = src;
-	    },
+		  getSource: function() {
+		    return curSrc;
+		  },
 
-	    play: function() {
-	      this_player.play();
-	    },
+		  getController: function() {
+		    return controller;
+		  },
 
-	    pause: function() {
-	      this_player.pause();
-	    },
+		  play: function() {
+		    domNode.play();
+		  },
 
-	    toggle: function() {
-	      if (this_isPlaying) {
-	        this.pause();
-	      }
-	      else {
-	        this.play();
-	      }
-	      this_isPlaying = !this._isPlaying;
-	    }
-	});
+		  pause: function() {
+		    domNode.pause();
+		  },
+
+		  toggle: function(controlId) {
+		    controller = controlId;
+		    if (isPlaying) {
+		      domNode.pause();
+		      isPlaying = false;
+		    }
+		    else {
+		      if (canPlay) {
+		        this.play();
+		        isPlaying = true;
+		      }
+		      else {
+		        domNode.addEventListener('canplay', function() {
+		          canPlay = true;
+		          this.play();
+		          domNode.removeEventListener('canplay', this);
+		          isPlaying = true;
+		        });
+		      }
+		    }
+		  }
+		}
+	}
+}, '0.0.1', {
+    requires: ['node', 'event']
 });

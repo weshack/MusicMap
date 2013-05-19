@@ -1,5 +1,5 @@
 YUI().use('node', 'autocomplete', 'gallery-player',
-  'stylesheet', 'json', 'io',
+  'stylesheet', 'json', 'io', 'audio-player',
 function(Y) {
   var WES_COORDS = new google.maps.LatLng(41.555577, -72.657437);
   var INIT_ZOOM = 17;
@@ -27,68 +27,68 @@ function(Y) {
   var responsiveStyle = new Y.StyleSheet();
   var curSearchWindow = null;
   var curMarkerDisplay = null;
-  var audioPlayer = AudioPlayer();
+  var audioPlayer = Y.AudioPlayer();
   google.maps.visualRefresh = true;
 
-  function AudioPlayer() {
-    var player = Y.Node.create("<audio></audio>");
-    var domNode = player.getDOMNode();
-    var isPlaying = false;
-    var canPlay = false;
-    var curSrc = null;
-    var controller;
-    Y.one("body").append(player);
-    player.on('canplay', function() {
-      canPlay = true;
-    });
-    return {
-      setSource: function(src) {
-        if (curSrc !== src) {
-          curSrc = src;
-          player.set('src', curSrc);
-          canPlay = false;
-        }
-      },
+  // function AudioPlayer() {
+  //   var player = Y.Node.create("<audio></audio>");
+  //   var domNode = player.getDOMNode();
+  //   var isPlaying = false;
+  //   var canPlay = false;
+  //   var curSrc = null;
+  //   var controller;
+  //   Y.one("body").append(player);
+  //   player.on('canplay', function() {
+  //     canPlay = true;
+  //   });
+  //   return {
+  //     setSource: function(src) {
+  //       if (curSrc !== src) {
+  //         curSrc = src;
+  //         player.set('src', curSrc);
+  //         canPlay = false;
+  //       }
+  //     },
 
-      getSource: function() {
-        return curSrc;
-      },
+  //     getSource: function() {
+  //       return curSrc;
+  //     },
 
-      getController: function() {
-        return controller;
-      },
+  //     getController: function() {
+  //       return controller;
+  //     },
 
-      play: function() {
-        domNode.play();
-      },
+  //     play: function() {
+  //       domNode.play();
+  //     },
 
-      pause: function() {
-        domNode.pause();
-      },
+  //     pause: function() {
+  //       domNode.pause();
+  //     },
 
-      toggle: function(controlId) {
-        controller = controlId;
-        if (isPlaying) {
-          domNode.pause();
-          isPlaying = false;
-        }
-        else {
-          if (canPlay) {
-            this.play();
-            isPlaying = true;
-          }
-          else {
-            domNode.addEventListener('canplay', function() {
-              canPlay = true;
-              this.play();
-              domNode.removeEventListener('canplay', this);
-              isPlaying = true;
-            });
-          }
-        }
-      }
-    }
-  }
+  //     toggle: function(controlId) {
+  //       controller = controlId;
+  //       if (isPlaying) {
+  //         domNode.pause();
+  //         isPlaying = false;
+  //       }
+  //       else {
+  //         if (canPlay) {
+  //           this.play();
+  //           isPlaying = true;
+  //         }
+  //         else {
+  //           domNode.addEventListener('canplay', function() {
+  //             canPlay = true;
+  //             this.play();
+  //             domNode.removeEventListener('canplay', this);
+  //             isPlaying = true;
+  //           });
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   function resizeResponse() {
     var canvasHeight = parseInt(Y.one('#map-canvas').getComputedStyle('height'));
