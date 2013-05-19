@@ -1,5 +1,5 @@
 YUI().use('node', 'autocomplete', 'gallery-player', 'slider',
-  'stylesheet',
+  'stylesheet', 'json', 'io',
 function(Y) {
   var WES_COORDS = new google.maps.LatLng(41.555577, -72.657437);
   var INIT_ZOOM = 17;
@@ -38,15 +38,42 @@ function(Y) {
 
   function songResultFormatter(query, results) {
     return Y.Array.map(results, function(result) {
-      var song = result.raw;
+      var songRec = result.raw;
       var max_len = 37;
       return Y.Lang.sub(SONG_AC_TPL, {
-        art_url: song.art_url,
-        song: ellipsize(song.song, max_len),
-        artist: ellipsize(song.artist, max_len),
-        album: ellipsize(song.album, max_len)
+        art_url: songRec.art_url,
+        song: ellipsize(songRec.song, max_len),
+        artist: ellipsize(songRec.artist, max_len),
+        album: ellipsize(songRec.album, max_len)
       });
     });
+  }
+
+  function postTag(e, position) {
+    var songRec = e.result.raw,
+        latitude = position.lat(),
+        longitude = position.lng();
+    var tagAttrs = {
+      longitude: longitude,
+      latitude: latitude,
+      song_id: songRec.song_id,
+      artist: songRec.artist,
+      album: songRec.album,
+      song: songRec.song
+    };
+    var cfg = {
+      method: 'POST',
+      data: JSON.stringify(tagAttrs),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+      on: {
+        complete: function(e) {
+          alert('It Worked!');
+        }
+      }
+    };
+    var request = Y.io('/create');
   }
 
   function tagSong(position, map) {
@@ -66,12 +93,14 @@ function(Y) {
       var ac = new Y.AutoComplete({
         inputNode: Y.one('.songsearch .searchbox'),
         render: true,
-        source: 'http://localhost:3000/songlib/{query}.json',
+        source: '/songlib/{query}.json',
         resultFormatter: songResultFormatter,
         activateFirstItem: true,
         queryDelay: 300,
-        maxResults: 7
+        maxResults: 7,
+        enableCache: true
       });
+      ac.on('select', postTag, this, position);
       // TODO: This is pretty hacky. Try to find a better way to make
       // the autocomplete results drop below the InfoWindow.
       Y.one('.songsearch').get('parentNode')
