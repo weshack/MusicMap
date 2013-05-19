@@ -8,7 +8,11 @@
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQ84LjygbqhfMnk1OT5INZNttWhBn8Jd4&sensor=true">
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
-  <script> var UID = <%= current_user.uid %>; </script>
+  <% if current_user %>
+    <script>var UID = <%= current_user.uid %>;</script>
+  <% else %>
+    <script>var UID = null;</script>
+  <% end %>
 </head>
 <body class="yui3-skin-sam">
 
