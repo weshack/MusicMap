@@ -12,6 +12,10 @@ MusicMap::Application.routes.draw do
   match '/songtagsall', :to => 'songs#sontagsall', :via => :get
   match '/songlib/:query', :to => 'songs#songlib', :via => :get
 
+  match 'auth/:provider/callback', :to => 'sessions#create'
+  match 'auth/failure', :to => redirect('/')
+  match 'signout', :to => 'sessions#destroy', :as => 'signout'
+
 
 
   # The priority is based upon order of creation:
