@@ -116,10 +116,20 @@ class SongsController < ApplicationController
     end
   end
 
+  # GET /close_songs/:coord
+  # GET /close_songs/:coord.json
   def show_close_songs
+    # finds all songs tagged within a .5 mile radius
     radius = 0.5
-    location = [41.5560, -72.6556]
-    @songs = Song.near(session[:location], radius)
+    lat = params[:lat].to_f #lat_lng_list[0].to_f
+    lng = params[:lng].to_f #lat_lng_list[1].to_f
+    location = [lat, lng]
+    @songs = Song.near(location, radius)
+
+    respond_to do |format|
+      format.html { redirect_to root_path }
+      format.json { render :json => @songs }
+    end
   end
 
   def set_geolocation
