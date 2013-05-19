@@ -8,7 +8,8 @@
   <script src="http://yui.yahooapis.com/3.10.1/build/yui/yui-min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQ84LjygbqhfMnk1OT5INZNttWhBn8Jd4&sensor=true">
   <script src="/assets/audio-player.js"></script>
-  <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "common" %>
+  <%= javascript_include_tag "mainview" %>
   <%= csrf_meta_tags %>
   <% if current_user %>
     <script>var UID = <%= current_user.uid %>;</script>

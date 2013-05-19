@@ -22,7 +22,7 @@ YUI.add('common', function(Y) {
 		var canPlay = false;
 		var curSrc = null;
 		var controller;
-		Y.one("body").append(player);
+		//Y.one("body").append(player);
 		player.on('canplay', function() {
 		  canPlay = true;
 		});
@@ -84,22 +84,17 @@ YUI.add('common', function(Y) {
      }
   }
 
-   Y.getNearbySongs = function(latLng, radius) {
-    var latitude = latLng.lat(),
-        longitude = latLng.lng();
-    Y.once('io:success', function(id, o, args) {
-      nearbySongs = Y.JSON.parse(o.responseText);//.slice(0, 1);
-      html = "<div class='nearby-songs'>";
-      nearbySongs.forEach(function(songTag) {
-        html += Y.songTagFormatter(songTag);
-      });
-      html += "</div>";
-      Y.one("#sidebar").setHTML(html);
-    });
+   
 
-    Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius +
-         "/song.json");
-    }
+   Y.getNearbyMobile = function(latLng, radius) {
+      var latitude = latLng.lat(),
+          longitude = latLng.lng();
+      Y.once('io:success', function(id, o, args) {
+        nearbySongs = Y.JSON.parse(o.parseText);
+        //TODO: use the music player to play throught the list of songs in
+        //      nearbySongs
+      });
+   }
 
   Y.songTagFormatter = function (songTag) {
     var max_len = 37;
