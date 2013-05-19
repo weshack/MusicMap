@@ -1,5 +1,5 @@
-YUI().use('node', 'autocomplete', 'gallery-player',
-  'stylesheet', 'json', 'io', 'audio-player',
+YUI().use('node', 'autocomplete',
+  'stylesheet', 'json', 'io', 'common',
 function(Y) {
   var WES_COORDS = new google.maps.LatLng(41.555577, -72.657437);
   var INIT_ZOOM = 17;
@@ -30,67 +30,7 @@ function(Y) {
   var audioPlayer = Y.AudioPlayer();
   google.maps.visualRefresh = true;
 
-  // function AudioPlayer() {
-  //   var player = Y.Node.create("<audio></audio>");
-  //   var domNode = player.getDOMNode();
-  //   var isPlaying = false;
-  //   var canPlay = false;
-  //   var curSrc = null;
-  //   var controller;
-  //   Y.one("body").append(player);
-  //   player.on('canplay', function() {
-  //     canPlay = true;
-  //   });
-  //   return {
-  //     setSource: function(src) {
-  //       if (curSrc !== src) {
-  //         curSrc = src;
-  //         player.set('src', curSrc);
-  //         canPlay = false;
-  //       }
-  //     },
-
-  //     getSource: function() {
-  //       return curSrc;
-  //     },
-
-  //     getController: function() {
-  //       return controller;
-  //     },
-
-  //     play: function() {
-  //       domNode.play();
-  //     },
-
-  //     pause: function() {
-  //       domNode.pause();
-  //     },
-
-  //     toggle: function(controlId) {
-  //       controller = controlId;
-  //       if (isPlaying) {
-  //         domNode.pause();
-  //         isPlaying = false;
-  //       }
-  //       else {
-  //         if (canPlay) {
-  //           this.play();
-  //           isPlaying = true;
-  //         }
-  //         else {
-  //           domNode.addEventListener('canplay', function() {
-  //             canPlay = true;
-  //             this.play();
-  //             domNode.removeEventListener('canplay', this);
-  //             isPlaying = true;
-  //           });
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
-  function resizeResponse() {
+  function resizeResponse(center) {
     var canvasHeight = parseInt(Y.one('#map-canvas').getComputedStyle('height'));
     responsiveStyle.set('#map-canvas .yui3-aclist .yui3-aclist-content', {
       maxHeight: (canvasHeight/2) + 'px',
@@ -119,17 +59,7 @@ function(Y) {
     });
   }
 
-  function songTagFormatter(songTag) {
-    var max_len = 37;
-    return Y.Lang.sub(SONG_TAG_TPL, {
-      art_url: songTag.art_url,
-      song: ellipsize(songTag.song, max_len),
-      artist: ellipsize(songTag.artist, max_len),
-      album: ellipsize(songTag.album, max_len),
-      address: songTag.address,
-      stream_url: songTag.stream_url
-    });
-  }
+  
 
   function postTag(e, latLng, infoWindow) {
     var songRec = e.result.raw,
@@ -156,7 +86,6 @@ function(Y) {
       on: {
         success: function(e) {
           curSearchWindow.close();
-          console.log(position);
           var marker = new google.maps.Marker({
             position: latLng,
             map: map,
@@ -209,23 +138,7 @@ function(Y) {
     curSearchWindow.open(map);
   }
 
-  function getNearbySongs(latLng, radius) {
-    var latitude = latLng.lat(),
-        longitude = latLng.lng();
-    Y.once('io:success', function(id, o, args) {
-      nearbySongs = Y.JSON.parse(o.responseText);//.slice(0, 1);
-      html = "<div class='nearby-songs'>";
-      nearbySongs.forEach(function(songTag) {
-        html += songTagFormatter(songTag);
-      });
-      html += "</div>";
-      Y.one("#sidebar").setHTML(html);
-    });
-
-    Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius +
-         "/song.json");
-  }
-
+  
   function placeRadius(position, map) {
      var circleOptions = {
       strokeColor: '#FF0000',
@@ -241,10 +154,10 @@ function(Y) {
     };
     radiusCircle = new google.maps.Circle(circleOptions);
     google.maps.event.addListener(radiusCircle, 'center_changed', function() {
-      getNearbySongs(radiusCircle.center, radiusCircle.radius);
+      Y.getNearbySongs(radiusCircle.center, radiusCircle.radius);
     });
     google.maps.event.addListener(radiusCircle, 'radius_changed', function() {
-      getNearbySongs(radiusCircle.center, radiusCircle.radius);
+      Y.getNearbySongs(radiusCircle.center, radiusCircle.radius);
     });
 
   }
@@ -257,7 +170,7 @@ function(Y) {
   function makeMarkerCallback(songTag, latLng) {
     return function() {
       var max_len = 37;
-      var content = Y.Node.create(songTagFormatter(songTag));
+      var content = Y.Node.create(Y.songTagFormatter(songTag));
       closeMarkerDisplay();
       curMarkerDisplay = new google.maps.InfoWindow({
         content: content.getDOMNode(),
@@ -303,7 +216,7 @@ function(Y) {
     });
     google.maps.event.addListener(map, 'click', closeMarkerDisplay);
     placeRadius(WES_COORDS, map);
-    getNearbySongs(WES_COORDS);
+    Y.getNearbySongs(WES_COORDS, 27.432);
   }
 
   Y.one('window').on('resize', resizeResponse);
