@@ -1,4 +1,5 @@
 YUI().use('node', 'autocomplete', 'gallery-player', 'slider',
+  'stylesheet',
 function(Y) {
   var WES_COORDS = new google.maps.LatLng(41.555577, -72.657437);
   var INIT_ZOOM = 17;
@@ -14,8 +15,17 @@ function(Y) {
                         "{artist}<br>{album}" +
                       "</div>" +
                     "</div>";
+  var windowWidth, windowHeight;
+  var responsiveStyle = new Y.StyleSheet();
   var curSearchWindow = null;
   google.maps.visualRefresh = true;
+
+  function resizeResponse() {
+    var canvasHeight = parseInt(Y.one('#map-canvas').getComputedStyle('height'));
+    responsiveStyle.set('#map-canvas .yui3-aclist .yui3-aclist-content', {
+      maxHeight: (canvasHeight/2) + 'px',
+    });
+  }
 
   function ellipsize(str, maxLen) {
      if (str.length > maxLen) {
@@ -89,4 +99,6 @@ function(Y) {
   }
 
   Y.on('domready', initialize);
+  Y.one('window').on('resize', resizeResponse)
+  resizeResponse();
 });
