@@ -1,4 +1,4 @@
-YUI.add('common', function(Y) {
+YUI.add('common','io', function(Y) {
 
   var SONG_AC_TPL = "<div class='song'>" +
                       "<img class='album-art' src={art_url}>" +
@@ -85,16 +85,18 @@ YUI.add('common', function(Y) {
   }
 
    
-
-   Y.getNearbyMobile = function(latLng, radius) {
-     console.log(latLng);
+  Y.getNearbyMobile = function(latLng, radius) {
+    console.log(latLng);
       var latitude = latLng.lat(),
           longitude = latLng.lng();
       Y.once('io:success', function(id, o, args) {
         nearbySongs = Y.JSON.parse(o.parseText);
+        console.log(nearbySongs);
         //TODO: use the music player to play throught the list of songs in
         //      nearbySongs
       });
+
+      Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius + '/song.json');
    }
 
   Y.songTagFormatter = function (songTag) {

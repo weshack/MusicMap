@@ -203,6 +203,7 @@ function(Y) {
   }
 
   function initMap() {
+    console.log('init');
     var mapOptions = {
       center: WES_COORDS,
       zoom: INIT_ZOOM,
@@ -213,7 +214,6 @@ function(Y) {
     map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
     Y.once('io:complete', function(id, o, args) {
-      console.log(o.responseText);
       var songTags = Y.JSON.parse(o.responseText);
       for (var i = 0; i < songTags.length; i++) {
         var songTag = songTags[i];
