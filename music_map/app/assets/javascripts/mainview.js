@@ -1,6 +1,9 @@
 YUI().use('node', 'autocomplete',
   'stylesheet', 'json', 'io', 'common',
 function(Y) {
+  var img = new Image();
+  img.src = "https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1";
+
   var WES_COORDS = new google.maps.LatLng(41.555577, -72.657437);
   var INIT_ZOOM = 17;
   var SEARCH_TPL = "<div class='songsearch'>" +
@@ -75,7 +78,6 @@ function(Y) {
     Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius +
          "/song.json");
     }
-
 
   function postTag(e, latLng, infoWindow) {
     var songRec = e.result.raw,
@@ -224,9 +226,28 @@ function(Y) {
             animation: google.maps.Animation.DROP,
         });
         google.maps.event.addListener(marker, 'click', makeMarkerCallback(songTag, latLng));
+
+    var cfg = {
+      method: 'GET',
+      on: {
+        complete: function(id, o, args) {
+          console.log(o.responseText);
+          var songTags = Y.JSON.parse(o.responseText);
+            for (var i = 0; i < songTags.length; i++) {
+              var songTag = songTags[i];
+              var latLng = new google.maps.LatLng(songTag.latitude, songTag.longitude);
+              var marker = new google.maps.Marker({
+              position: latLng,
+              map: map,
+              animation: google.maps.Animation.DROP,
+            });
+            console.log(marker);
+            google.maps.event.addListener(marker, 'click', makeMarkerCallback(songTag, latLng));
+          }
+        }
       }
-    });
-    Y.io("/songs.json");
+    };
+    var request = Y.io("/songs.json", cfg);
     google.maps.event.addListener(map, 'dblclick', function(e) {
       tagSong(e.latLng, map);
     });

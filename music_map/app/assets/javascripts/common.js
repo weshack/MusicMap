@@ -22,7 +22,7 @@ YUI.add('common','io', function(Y) {
 		var canPlay = false;
 		var curSrc = null;
 		var controller;
-		//Y.one("body").append(player);
+		Y.one("body").append(player);
 		player.on('canplay', function() {
 		  canPlay = true;
 		});
@@ -91,9 +91,16 @@ YUI.add('common','io', function(Y) {
           longitude = latLng.lng();
       Y.once('io:success', function(id, o, args) {
         nearbySongs = Y.JSON.parse(o.parseText);
-        console.log(nearbySongs);
-        //TODO: use the music player to play throught the list of songs in
-        //      nearbySongs
+
+
+        // use the music player to play throught the list of songs in
+        // nearbySongs
+        var player = Y.AudioPlayer;
+        for(var i = 0; i < nearbySongs.length; i++){
+          stream_url = nearbySongs[i]['stream_url'];
+          player.setSource(stream_url);
+          player.play();     
+        }
       });
 
       Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius + '/song.json');
