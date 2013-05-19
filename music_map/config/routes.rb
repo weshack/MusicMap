@@ -14,7 +14,7 @@ MusicMap::Application.routes.draw do
     :latitude => DECIMAL_PATTERN }, :via => :get
   
 
-# match '/close_songs(/:lat(/:lng))', :to => 'songs#show_close_songs', :via => :get
+  match '/home/index?mobile=1', :to => 'songs#songs', :via => :get
   match '/create', :to => 'songs#create', :via => :post
   match '/songtagsall', :to => 'songs#sontagsall', :via => :get
   match '/songlib/:query', :to => 'songs#songlib', :via => :get

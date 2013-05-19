@@ -5,14 +5,12 @@
     <title>Wes Music Map</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <%= stylesheet_link_tag    "application", :media => "all" %>
-    <%= stylesheet_link_tag 'mobile' if mobile_device? %>
     <script src="http://yui.yahooapis.com/3.10.1/build/yui/yui-min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQ84LjygbqhfMnk1OT5INZNttWhBn8Jd4&sensor=true"></script>
-  </head>
+    <%= javascript_include_tag "application" %>    
+</head>
   <body class="yui3-skin-sam">
-      <div id="album-art"></div>
-      <div id="song-info"></div>
-      <div id="map-canvas"></div>
+    <%= yield %>
   </body>
 </html>
 

@@ -21,6 +21,7 @@ class SongsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @songs }
+      format.mobile { render :json => @songs }
     end
   end
 
@@ -144,6 +145,7 @@ class SongsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to root_path }
       format.json { render :json => @songs }
+      format.mobile {render :json => @songs }
     end
   end
 
