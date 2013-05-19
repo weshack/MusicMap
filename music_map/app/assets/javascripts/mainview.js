@@ -59,7 +59,7 @@ function(Y) {
     });
   }
 
-  
+
 
   function postTag(e, latLng, infoWindow) {
     var songRec = e.result.raw,
@@ -138,7 +138,7 @@ function(Y) {
     curSearchWindow.open(map);
   }
 
-  
+
   function placeRadius(position, map) {
      var circleOptions = {
       strokeColor: '#FF0000',
@@ -196,7 +196,7 @@ function(Y) {
 
     map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
-    Y.once('io:success', function(id, o, args) {
+    Y.once('io:complete', function(id, o, args) {
       console.log(o.responseText);
       var songTags = Y.JSON.parse(o.responseText);
       for (var i = 0; i < songTags.length; i++) {
