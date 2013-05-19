@@ -23,7 +23,7 @@ YUI().use('node', 'common', 'json', 'io',
         map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
         //TODO: get songs from database and put on map
         Y.once('io:success', function(id, o, args) {
-          Y.getNearbySongs(map.getCenter, 50);
+          Y.getNearbyMobile(map.getCenter, 50);
         });
       }
 
@@ -36,7 +36,7 @@ YUI().use('node', 'common', 'json', 'io',
         map.setCenter(new google.maps.LatLng(lat, lng));
 
         //TODO: load songs near position
-        Y.getNearbySongs(map.getCenter, 50);
+        Y.getNearbyMobile(map.getCenter, 50);
       }
 
       var watchId = navigator.geolocation.watchPosition(scrollMap);
