@@ -213,6 +213,7 @@ function(Y) {
   }
 
   function initMap() {
+    console.log('init');
     var mapOptions = {
       center: WES_COORDS,
       zoom: INIT_ZOOM,
@@ -222,6 +223,17 @@ function(Y) {
 
     map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
+    Y.once('io:complete', function(id, o, args) {
+      var songTags = Y.JSON.parse(o.responseText);
+      for (var i = 0; i < songTags.length; i++) {
+        var songTag = songTags[i];
+        var latLng = new google.maps.LatLng(songTag.latitude, songTag.longitude);
+        var marker = new google.maps.Marker({
+            position: latLng,
+            map: map,
+            animation: google.maps.Animation.DROP,
+        });
+        google.maps.event.addListener(marker, 'click', makeMarkerCallback(songTag, latLng));
 
     var cfg = {
       method: 'GET',

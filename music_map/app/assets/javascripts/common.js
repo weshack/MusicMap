@@ -1,4 +1,4 @@
-YUI.add('common', function(Y) {
+YUI.add('common','io', function(Y) {
 
   var SONG_AC_TPL = "<div class='song'>" +
                       "<img class='album-art' src={art_url}>" +
@@ -22,7 +22,7 @@ YUI.add('common', function(Y) {
 		var canPlay = false;
 		var curSrc = null;
 		var controller;
-		//Y.one("body").append(player);
+		Y.one("body").append(player);
 		player.on('canplay', function() {
 		  canPlay = true;
 		});
@@ -84,17 +84,25 @@ YUI.add('common', function(Y) {
      }
   }
 
-
-
    Y.getNearbyMobile = function(latLng, radius) {
      console.log(latLng);
       var latitude = latLng.lat(),
           longitude = latLng.lng();
       Y.once('io:success', function(id, o, args) {
         nearbySongs = Y.JSON.parse(o.parseText);
-        //TODO: use the music player to play throught the list of songs in
-        //      nearbySongs
+
+
+        // use the music player to play throught the list of songs in
+        // nearbySongs
+        var player = Y.AudioPlayer;
+        for(var i = 0; i < nearbySongs.length; i++){
+          stream_url = nearbySongs[i]['stream_url'];
+          player.setSource(stream_url);
+          player.play();
+        }
       });
+
+      Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius + '/song.json');
    }
 
   Y.songTagFormatter = function (songTag, max_len) {
