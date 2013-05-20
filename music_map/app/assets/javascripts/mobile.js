@@ -35,7 +35,7 @@ YUI().use('node', 'common', 'json', 'io',
         map.setCenter(new google.maps.LatLng(lat, lng));
 
         //load songs near position
-        Y.getNearbyMobile(position, 50);
+        Y.getNearbyMobile(position, 50);        
       }
 
       var watchId = navigator.geolocation.watchPosition(scrollMap);       
