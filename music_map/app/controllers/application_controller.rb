@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
       @current_user ||= User.find(session[:user_id]) if session[:user_id]
    end
 
-   before_filter :prepare_for_mobile
+   # before_filter :prepare_for_mobile
 
 private
 
