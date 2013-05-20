@@ -15,6 +15,16 @@ YUI.add('common', function(Y) {
                          "<a class='playpause' href='{stream_url}'>Play/Pause</a>\n" +
                        "</div>\n";
 
+  var SONG_MAP_TPL = "<div class='song'>" +
+                      "<img class='album-art' src={art_url}>" +
+                      "<img class='album-art' src={facebook_url}>\n" +
+                       "<div class='song-info'>\n" +
+                         "<div class='song-name'>{song}</div>\n" +
+                         "{artist}<br>{album}<br>\n" +
+                         "<a class='playpause' href='{stream_url}'>Play/Pause</a>\n" +
+                       "</div>\n";
+
+
 	Y.AudioPlayer = function() {
 		var player = Y.Node.create("<audio></audio>");
 		var domNode = player.getDOMNode();
@@ -160,20 +170,37 @@ YUI.add('common', function(Y) {
     });
   }
 
-  var list =
-  [{stream_url: "http://api.7digital.com/1.2/track/preview?trackId=28905854&country=US&oauth_consumer_key=7dkn3ygtanwv"},
-    {stream_url: "http://api.7digital.com/1.2/track/preview?trackId=212153&country=US&oauth_consumer_key=7dkn3ygtanwv"}]
 
-  var player = Y.PlaylistPlayer(list);
-  player.startPlay();
+  Y.songTagFormatter2 = function (songTag, max_len) {
+    max_len = max_len || 37;
+    console.log(max_len);
+    console.log("In song tag formatter two");
+    console.log(songTag.facebook_url);
+    console.log(songTag.facebook_url === null);
+    if (songTag.facebook_url !== null) {
+      return Y.Lang.sub(SONG_MAP_TPL, {
+      art_url: songTag.art_url,
+      song: ellipsize(songTag.song, max_len),
+      artist: ellipsize(songTag.artist, max_len),
+      album: ellipsize(songTag.album, max_len),
+      address: songTag.address,
+      stream_url: songTag.stream_url,
+      facebook_url: songTag.facebook_url
+      });
+    }
+    else {
+      return Y.Lang.sub(SONG_TAG_TPL, {
+      art_url: songTag.art_url,
+      song: ellipsize(songTag.song, max_len),
+      artist: ellipsize(songTag.artist, max_len),
+      album: ellipsize(songTag.album, max_len),
+      address: songTag.address,
+      stream_url: songTag.stream_url
+      });
+    }
+  }
 
-  Y.one("#Next").on('click', function(){
-    console.log('press next');
-    player.next(); 
-  });
-    Y.one("#Pause").on('click', function() {
-    player.pause();
-  }); 
+
 
 }, '0.0.1', {
     requires: ['node', 'event']

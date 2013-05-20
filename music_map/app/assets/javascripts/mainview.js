@@ -195,7 +195,7 @@ function(Y) {
   function makeMarkerCallback(songTag, latLng) {
     return function() {
       var max_len = 37;
-      var content = Y.Node.create(Y.songTagFormatter(songTag));
+      var content = Y.Node.create(Y.songTagFormatter2(songTag));
       closeMarkerDisplay();
       curMarkerDisplay = new google.maps.InfoWindow({
         content: content.getDOMNode(),
