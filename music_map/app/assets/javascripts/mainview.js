@@ -262,4 +262,13 @@ function(Y) {
       audioPlayer.toggle(e.currentTarget.get('id'));
   }, '.playpause');
   resizeResponse();
+
+  Y.one("#show-about").on("click", function() {
+    Y.one("#about-us").addClass("fullpage")
+                      .setStyle('display', 'block');
+  });
+  Y.one("#close-about").on("click", function() {
+    Y.one("#about-us").removeClass("fullpage")
+                      .setStyle('display', 'none');
+  });
 });
