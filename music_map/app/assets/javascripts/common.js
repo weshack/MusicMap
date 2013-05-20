@@ -15,6 +15,16 @@ YUI.add('common', function(Y) {
                          "<a class='playpause' href='{stream_url}'>Play/Pause</a>\n" +
                        "</div>\n";
 
+  var SONG_MAP_TPL = "<div class='song'>" +
+                      "<img class='album-art' src={art_url}>" +
+                      "<img class='album-art' src={facebook_url}>\n" +
+                       "<div class='song-info'>\n" +
+                         "<div class='song-name'>{song}</div>\n" +
+                         "{artist}<br>{album}<br>\n" +
+                         "<a class='playpause' href='{stream_url}'>Play/Pause</a>\n" +
+                       "</div>\n";
+
+
 	Y.AudioPlayer = function() {
 		var player = Y.Node.create("<audio></audio>");
 		var domNode = player.getDOMNode();
@@ -108,6 +118,7 @@ YUI.add('common', function(Y) {
   Y.songTagFormatter = function (songTag, max_len) {
     max_len = max_len || 37;
     console.log(max_len);
+    console.log("In song tag formatter one");
     return Y.Lang.sub(SONG_TAG_TPL, {
       art_url: songTag.art_url,
       song: ellipsize(songTag.song, max_len),
@@ -117,6 +128,36 @@ YUI.add('common', function(Y) {
       stream_url: songTag.stream_url
     });
   }
+
+  Y.songTagFormatter2 = function (songTag, max_len) {
+    max_len = max_len || 37;
+    console.log(max_len);
+    console.log("In song tag formatter two");
+    console.log(songTag.facebook_url);
+    console.log(songTag.facebook_url === null);
+    if (songTag.facebook_url !== null) {
+      return Y.Lang.sub(SONG_MAP_TPL, {
+      art_url: songTag.art_url,
+      song: ellipsize(songTag.song, max_len),
+      artist: ellipsize(songTag.artist, max_len),
+      album: ellipsize(songTag.album, max_len),
+      address: songTag.address,
+      stream_url: songTag.stream_url,
+      facebook_url: songTag.facebook_url
+      });
+    }
+    else {
+      return Y.Lang.sub(SONG_TAG_TPL, {
+      art_url: songTag.art_url,
+      song: ellipsize(songTag.song, max_len),
+      artist: ellipsize(songTag.artist, max_len),
+      album: ellipsize(songTag.album, max_len),
+      address: songTag.address,
+      stream_url: songTag.stream_url
+      });
+    }
+  }
+
 
 
 }, '0.0.1', {
