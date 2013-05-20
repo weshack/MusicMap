@@ -264,4 +264,6 @@ function(Y) {
       audioPlayer.toggle(e.currentTarget.get('id'));
   }, '.playpause');
   resizeResponse();
-});
+    });
+  }
+  });

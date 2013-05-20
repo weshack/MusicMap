@@ -5,7 +5,6 @@ YUI().use('node', 'common', 'json', 'io',
       var INIT_ZOOM = 17;
       var map;
 
-
       function show_map(position) {
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
@@ -21,7 +20,7 @@ YUI().use('node', 'common', 'json', 'io',
         };
         
         map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-        //TODO: get songs from database and put on map
+        // get songs from database and put on map
         Y.once('io:success', function(id, o, args) {
           Y.getNearbyMobile(map.getCenter(), 50);
         });
@@ -35,7 +34,7 @@ YUI().use('node', 'common', 'json', 'io',
         var lng = position.coords.longitude;
         map.setCenter(new google.maps.LatLng(lat, lng));
 
-        //TODO: load songs near position
+        //load songs near position
         Y.getNearbyMobile(position, 50);
       }
 
