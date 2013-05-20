@@ -132,11 +132,22 @@ YUI.add('common', function(Y) {
       Y.once('io:success', function(id, o, args) {
         var nearbySongs = Y.JSON.parse(o.parseText);
         var playList = Y.PlayListPlayer(nearbySongs);
-        playlist.play();  
+        
+        playlist.play();
+
+        Y.one("#Next").on('click', function(){
+          console.log('press next');
+          playList.next(); 
+        });
+        Y.one("#Pause").on('click', function() {
+          playList.pause();
+        });  
       });
+
       Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius + '/song.json');
   }
 
+  
   Y.songTagFormatter = function (songTag, max_len) {
     max_len = max_len || 37;
     return Y.Lang.sub(SONG_TAG_TPL, {
@@ -149,6 +160,20 @@ YUI.add('common', function(Y) {
     });
   }
 
+  var list =
+  [{stream_url: "http://api.7digital.com/1.2/track/preview?trackId=28905854&country=US&oauth_consumer_key=7dkn3ygtanwv"},
+    {stream_url: "http://api.7digital.com/1.2/track/preview?trackId=212153&country=US&oauth_consumer_key=7dkn3ygtanwv"}]
+
+  var player = Y.PlaylistPlayer(list);
+  player.startPlay();
+
+  Y.one("#Next").on('click', function(){
+    console.log('press next');
+    player.next(); 
+  });
+    Y.one("#Pause").on('click', function() {
+    player.pause();
+  }); 
 
 }, '0.0.1', {
     requires: ['node', 'event']
