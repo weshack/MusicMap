@@ -1,6 +1,7 @@
 YUI().use('node', 'autocomplete',
   'stylesheet', 'json', 'io', 'common',
 function(Y) {
+  console.log('hello');
   var img = new Image();
   img.src = "https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1";
 
@@ -32,6 +33,8 @@ function(Y) {
   var curMarkerDisplay = null;
   var audioPlayer = Y.AudioPlayer();
   google.maps.visualRefresh = true;
+  console.log("REFRESH");
+  
 
   function resizeResponse(center) {
     var canvasHeight = parseInt(Y.one('#map-canvas').getComputedStyle('height'));
@@ -223,18 +226,6 @@ function(Y) {
 
     map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
-    Y.once('io:complete', function(id, o, args) {
-      var songTags = Y.JSON.parse(o.responseText);
-      for (var i = 0; i < songTags.length; i++) {
-        var songTag = songTags[i];
-        var latLng = new google.maps.LatLng(songTag.latitude, songTag.longitude);
-        var marker = new google.maps.Marker({
-            position: latLng,
-            map: map,
-            animation: google.maps.Animation.DROP,
-        });
-        google.maps.event.addListener(marker, 'click', makeMarkerCallback(songTag, latLng));
-
     var cfg = {
       method: 'GET',
       on: {
@@ -245,12 +236,12 @@ function(Y) {
               var songTag = songTags[i];
               var latLng = new google.maps.LatLng(songTag.latitude, songTag.longitude);
               var marker = new google.maps.Marker({
-              position: latLng,
-              map: map,
-              animation: google.maps.Animation.DROP,
-            });
-            console.log(marker);
-            google.maps.event.addListener(marker, 'click', makeMarkerCallback(songTag, latLng));
+                position: latLng,
+                map: map,
+                animation: google.maps.Animation.DROP,
+              });
+              console.log(marker);
+              google.maps.event.addListener(marker, 'click', makeMarkerCallback(songTag, latLng));
           }
         }
       }
@@ -265,6 +256,7 @@ function(Y) {
   }
 
   Y.one('window').on('resize', resizeResponse);
+  console.log("ABOUT TO LOAD");
   Y.one('window').on('load', initMap);
   Y.one('body').delegate('click', function(e) {
       e.preventDefault();
@@ -272,6 +264,4 @@ function(Y) {
       audioPlayer.toggle(e.currentTarget.get('id'));
   }, '.playpause');
   resizeResponse();
-    });
-  }
-  });
+});
