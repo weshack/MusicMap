@@ -45,6 +45,10 @@ YUI.add('common', function(Y) {
 		    }
 		  },
 
+      getPlayElt: function() {
+        return domNode;
+      },
+
 		  getSource: function() {
 		    return curSrc;
 		  },
@@ -85,6 +89,44 @@ YUI.add('common', function(Y) {
 		}
 	}
 
+  Y.PlaylistPlayer = function(songTags) {
+    var audio = new Audio();
+    function _play(queue) {
+      console.log("in _play");
+      console.log(queue.length + " items in queue");
+      if (queue.length == 0) return;
+      var songTag = queue.shift();
+      audio.src = songTag.stream_url;
+      audio.addEventListener('ended', function() {
+        console.log(queue.length + "recursive call");      
+        _play(queue);
+      });
+      console.log("playing song");
+      audio.play();
+    }
+
+    return {
+      startPlay: function() {
+        _play(songTags);
+        Y.later(10000, this, function() {
+          this.pause();
+        });
+      },
+
+      next: function() {
+        audio.currentTime = audio.duration;
+      },
+
+      pause: function() {
+        audio.pause();
+      },
+
+      resumePlay: function() {
+        audio.play();
+      }
+    }
+  }
+
   function ellipsize(str, maxLen) {
      if (str.length > maxLen) {
        return str.substring(0, maxLen-3) + "...";
@@ -94,31 +136,19 @@ YUI.add('common', function(Y) {
      }
   }
 
-/*   Y.getNearbyMobile = function(latLng, radius) {
-     console.log(latLng);
+  Y.getNearbyMobile = function(latLng, radius) {
       var latitude = latLng.lat(),
           longitude = latLng.lng();
       Y.once('io:success', function(id, o, args) {
-        nearbySongs = Y.JSON.parse(o.parseText);
+        var nearbySongs = Y.JSON.parse(o.parseText);
+        var playList = Y.PlayListPlayer(nearbySongs);
+        playlist.play();  
+      });
+      Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius + '/song.json');
+  }
 
-
-        // use the music player to play throught the list of songs in
-        // nearbySongs
-//       var player = Y.AudioPlayer;
-//       for(var i = 0; i < nearbySongs.length; i++){
-//         stream_url = nearbySongs[i]['stream_url'];
-//         player.setSource(stream_url);
-//         player.play();
-//       }
-//     });
-
-//     Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius + '/song.json');
-   }
-*/
   Y.songTagFormatter = function (songTag, max_len) {
     max_len = max_len || 37;
-    console.log(max_len);
-    console.log("In song tag formatter one");
     return Y.Lang.sub(SONG_TAG_TPL, {
       art_url: songTag.art_url,
       song: ellipsize(songTag.song, max_len),

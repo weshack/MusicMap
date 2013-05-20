@@ -1,7 +1,6 @@
 YUI().use('node', 'autocomplete',
   'stylesheet', 'json', 'io', 'common',
 function(Y) {
-  console.log('hello');
   var img = new Image();
   img.src = "https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-poi.png&scale=1";
 
@@ -33,9 +32,7 @@ function(Y) {
   var curMarkerDisplay = null;
   var audioPlayer = Y.AudioPlayer();
   google.maps.visualRefresh = true;
-  console.log("REFRESH");
   
-
   function resizeResponse(center) {
     var canvasHeight = parseInt(Y.one('#map-canvas').getComputedStyle('height'));
     responsiveStyle.set('#map-canvas .yui3-aclist .yui3-aclist-content', {
@@ -216,7 +213,6 @@ function(Y) {
   }
 
   function initMap() {
-    console.log('init');
     var mapOptions = {
       center: WES_COORDS,
       zoom: INIT_ZOOM,
@@ -230,7 +226,6 @@ function(Y) {
       method: 'GET',
       on: {
         complete: function(id, o, args) {
-          console.log(o.responseText);
           var songTags = Y.JSON.parse(o.responseText);
             for (var i = 0; i < songTags.length; i++) {
               var songTag = songTags[i];
@@ -240,7 +235,6 @@ function(Y) {
                 map: map,
                 animation: google.maps.Animation.DROP,
               });
-              console.log(marker);
               google.maps.event.addListener(marker, 'click', makeMarkerCallback(songTag, latLng));
           }
         }
@@ -256,7 +250,6 @@ function(Y) {
   }
 
   Y.one('window').on('resize', resizeResponse);
-  console.log("ABOUT TO LOAD");
   Y.one('window').on('load', initMap);
   Y.one('body').delegate('click', function(e) {
       e.preventDefault();
