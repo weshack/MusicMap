@@ -69,6 +69,9 @@ function(Y) {
     Y.once('io:success', function(id, o, args) {
       nearbySongs = Y.JSON.parse(o.responseText);
       html = "<div class='nearby-songs'>";
+      if (nearbySongs.length === 0) {
+        html += "<div class = 'empty-list'>There are no songs at this location.<br>Get tagging!</div>";
+      };
       nearbySongs.forEach(function(songTag) {
         html += Y.songTagFormatter(songTag, 30);
       });
