@@ -21,7 +21,7 @@ YUI.add('common', function(Y) {
                        "<div class='song-info'>\n" +
                          "<div class='song-name'>{song}</div>\n" +
                          "{artist}<br>{album}<br>\n" +
-                         "<a class='playpause' href='{stream_url}'>Play/Pause</a>\n" +
+                         "<a class='playpause' href='{stream_url}'></a>\n" +
                        "</div>\n";
 
 
