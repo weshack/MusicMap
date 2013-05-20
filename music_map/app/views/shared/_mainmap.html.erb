@@ -1,16 +1,13 @@
 <div id="header">
-  <% if current_user %>
-      Signed in as <strong><%= current_user.name %></strong>!
-    <%= link_to "Sign out", signout_path, :id => "sign_out" %>
-  <% else %>
-    <%= link_to "Sign in with Facebook", "/auth/facebook", :id => "sign_in" %>
-<% end %>
-
-  <% if mobile_device? %>
-    <%= link_to "Full Site", :mobile => 0 %>
-  <% else %>
-    <%= link_to "Mobile Site", :mobile => 1 %>
-  <% end %>
+  <div id = "header-controls">
+	  <% if current_user %>
+	      Signed in as <strong><%= current_user.name %></strong>!
+	    <%= link_to "Sign out", signout_path, :id => "sign_out" %>
+	  <% else %>
+	    <%= link_to "Sign in with Facebook", "/auth/facebook", :id => "sign_in" %>
+	<% end %>
+  </div>
+  <h1>Wes Music Map</h1>
 </div>
 <div id="map-canvas"></div>
 <div id="sidebar"></div>
