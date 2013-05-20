@@ -32,7 +32,7 @@ function(Y) {
   var curMarkerDisplay = null;
   var audioPlayer = Y.AudioPlayer();
   google.maps.visualRefresh = true;
-  
+
   function resizeResponse(center) {
     var canvasHeight = parseInt(Y.one('#map-canvas').getComputedStyle('height'));
     responsiveStyle.set('#map-canvas .yui3-aclist .yui3-aclist-content', {
@@ -111,7 +111,7 @@ function(Y) {
             title: songRec.song,
             animation: google.maps.Animation.DROP,
           });
-          google.maps.event.addListener(marker, 'click', makeMarkerCallback(songTag, latLng));
+          google.maps.event.addListener(marker, 'click', makeMarkerCallback(songTag, latLng, true));
         },
         failure: function(e){
           curSearchWindow.close();
@@ -192,10 +192,16 @@ function(Y) {
       curMarkerDisplay.close();
   }
 
-  function makeMarkerCallback(songTag, latLng) {
+  function makeMarkerCallback(songTag, latLng, isNewTag) {
     return function() {
       var max_len = 37;
-      var content = Y.Node.create(Y.songTagFormatter2(songTag));
+      var content;
+      if (isNewTag === true) {
+        content = Y.Node.create(Y.songTagFormatter(songTag))
+      }
+      else {
+        content = Y.Node.create(Y.songTagFormatter2(songTag))
+      }
       closeMarkerDisplay();
       curMarkerDisplay = new google.maps.InfoWindow({
         content: content.getDOMNode(),
@@ -204,7 +210,6 @@ function(Y) {
       });
       curMarkerDisplay.open(map);
       google.maps.event.addListener(curMarkerDisplay, 'closeclick', function() {
-        console.log(audioPlayer.getController());
         if (audioPlayer.getController() === content.one('.playpause').get('id')) {
           audioPlayer.pause();
         }
