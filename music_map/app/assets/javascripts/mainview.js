@@ -49,15 +49,16 @@ function(Y) {
      }
   }
 
-  function songResultFormatter(query, results) {
+  function songResultFormatter(query, results, maxLen) {
+    maxLen = maxLen || 37;
+    console.log(maxLen);
     return Y.Array.map(results, function(result) {
       var songRec = result.raw;
-      var max_len = 37;
       return Y.Lang.sub(SONG_AC_TPL, {
         art_url: songRec.art_url,
-        song: ellipsize(songRec.song, max_len),
-        artist: ellipsize(songRec.artist, max_len),
-        album: ellipsize(songRec.album, max_len)
+        song: ellipsize(songRec.song, maxLen),
+        artist: ellipsize(songRec.artist, maxLen),
+        album: ellipsize(songRec.album, maxLen)
       });
     });
   }
@@ -66,17 +67,17 @@ function(Y) {
     var latitude = latLng.lat(),
         longitude = latLng.lng();
     Y.once('io:success', function(id, o, args) {
-      nearbySongs = Y.JSON.parse(o.responseText);//.slice(0, 1);
+      nearbySongs = Y.JSON.parse(o.responseText);
       html = "<div class='nearby-songs'>";
       nearbySongs.forEach(function(songTag) {
-        html += Y.songTagFormatter(songTag);
+        html += Y.songTagFormatter(songTag, 30);
       });
       html += "</div>";
-      Y.one("#sidebar").setHTML(html);
+      Y.one('#sidebar').setHTML(html);
     });
 
     Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius +
-         "/song.json");
+         '/song.json');
     }
 
   function postTag(e, latLng, infoWindow) {
@@ -146,6 +147,13 @@ function(Y) {
         enableCache: true
       });
       ac.on('select', postTag, this, position);
+      ac.on('query', function() {
+        Y.one('.songsearch').setStyle('backgroundImage',
+          'url("/assets/ajax-loader.gif")')
+      });
+      ac.on('results', function() {
+        Y.one('.songsearch').setStyle('backgroundImage', '');
+      });
       // TODO: This is pretty hacky. Try to find a better way to make
       // the autocomplete results drop below the InfoWindow.
       Y.one('.songsearch').get('parentNode')

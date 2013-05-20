@@ -84,9 +84,8 @@ YUI.add('common','io', function(Y) {
      }
   }
 
-   
-  Y.getNearbyMobile = function(latLng, radius) {
-    console.log(latLng);
+   Y.getNearbyMobile = function(latLng, radius) {
+     console.log(latLng);
       var latitude = latLng.lat(),
           longitude = latLng.lng();
       Y.once('io:success', function(id, o, args) {
@@ -99,15 +98,16 @@ YUI.add('common','io', function(Y) {
         for(var i = 0; i < nearbySongs.length; i++){
           stream_url = nearbySongs[i]['stream_url'];
           player.setSource(stream_url);
-          player.play();     
+          player.play();
         }
       });
 
       Y.io('/close_songs/' + latitude + '/' + longitude + '/' + radius + '/song.json');
    }
 
-  Y.songTagFormatter = function (songTag) {
-    var max_len = 37;
+  Y.songTagFormatter = function (songTag, max_len) {
+    max_len = max_len || 37;
+    console.log(max_len);
     return Y.Lang.sub(SONG_TAG_TPL, {
       art_url: songTag.art_url,
       song: ellipsize(songTag.song, max_len),
