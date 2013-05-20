@@ -84,7 +84,7 @@ YUI.add('common', function(Y) {
      }
   }
 
-   
+
 
    Y.getNearbyMobile = function(latLng, radius) {
      console.log(latLng);
@@ -97,8 +97,9 @@ YUI.add('common', function(Y) {
       });
    }
 
-  Y.songTagFormatter = function (songTag) {
-    var max_len = 37;
+  Y.songTagFormatter = function (songTag, max_len) {
+    max_len = max_len || 37;
+    console.log(max_len);
     return Y.Lang.sub(SONG_TAG_TPL, {
       art_url: songTag.art_url,
       song: ellipsize(songTag.song, max_len),

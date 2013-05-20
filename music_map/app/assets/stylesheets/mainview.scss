@@ -6,7 +6,8 @@ body {
   height: 100%;
   margin: 0px;
   padding: 0px;
-  font-family: Arial, "MS Trebuchet", sans-serif;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
   overflow: hidden;
 }
 
@@ -46,6 +47,7 @@ body {
     .song {
       margin-top: 5px;
       margin-bottom: 5px;
+      font-size: 14px;
     }
 
     .song-info {
@@ -53,7 +55,10 @@ body {
       display: inline-block;
       position: relative;
       top: -10px;
-      left: 10px
+      left: 10px;
+      .song-name {
+        font-weight: 500;
+      }
     }
   }
 }
@@ -78,6 +83,8 @@ body {
 .songsearch {
   width: 320px;
   height: 70px;
+  background-repeat: no-repeat;
+  background-position: 277px 45px;
   padding-top: 5px;
   padding-left: 5px;
   font-size: 16px;
